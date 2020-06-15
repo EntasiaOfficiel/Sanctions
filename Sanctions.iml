@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="WaterFall" level="project" />
     <orderEntry type="library" name="Libraries" level="project" />
+    <orderEntry type="library" name="LuckPerms-Bungee" level="project" />
   </component>
 </module>
