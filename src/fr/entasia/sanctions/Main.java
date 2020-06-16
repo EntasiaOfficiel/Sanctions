@@ -27,13 +27,15 @@ public class Main extends Plugin {
 		try{
 			getLogger().info("Activation du plugin..");
 			main = this;
-			sql = new SQLConnection("root"); // sanctions
+			sql = new SQLConnection("root", "sanctions"); // sanctions
 			lpAPI = LuckPerms.getApi();
 
 			getProxy().getPluginManager().registerListener(this, new Base());
 
 			getProxy().getPluginManager().registerCommand(this, new TestCmd());
 
+			getProxy().getPluginManager().registerCommand(this, new CheckCmd());
+			getProxy().getPluginManager().registerCommand(this, new HistoryCmd());
 			getProxy().getPluginManager().registerCommand(this, new BanCmd());
 			getProxy().getPluginManager().registerCommand(this, new SilentBanCmd());
 			getProxy().getPluginManager().registerCommand(this, new IPBanCmd());

@@ -5,10 +5,8 @@ import fr.entasia.apis.PlayerUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.SanctionEntry;
 import fr.entasia.sanctions.Utils;
-import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
-import me.lucko.luckperms.common.node.factory.NodeBuilder;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -18,19 +16,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
-public class BanCmd extends Command {
+public class HistoryCmd extends Command {
 
-
-	private static final Node banExcept = Main.lpAPI.buildNode("sanctions.ban.except").build();
-
-
-	public BanCmd() {
-		super("ban");
+	public HistoryCmd() {
+		super("history");
 	}
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(sender.hasPermission("sanctions.ban")){
+		if(sender.hasPermission("sanctions.history")){
 			sender.sendMessage(ChatComponent.create(execBan(sender, args, false)));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
@@ -44,23 +38,16 @@ public class BanCmd extends Command {
 		}else{
 			try{
 				ResultSet rs = Main.sql.fastSelectUnsafe("SELECT name,uuid FROM playerdata.global WHERE name=?", args[0]);
-				if(rs.next()) {
-					UUID uuid = UUID.fromString(rs.getString("uuid"));
-					User u = manager.getUser(uuid);
-					if (u == null) {
-						try {
-							u = manager.loadUser(uuid).get();
-						} catch (Exception e) {
-							e.printStackTrace();
-							return "§cImpossible de charger les données de cet utilisateur ! (Erreur LuckPerms, contacte iTrooz_)";
-						}
-						if (u == null) return "§cImpossible de charger les données de cet utilisateur !";
-						else{
-							if(u.hasPermission(banExcept).asBoolean()){
-								return "§cTu ne peut pas bannir cet utilisateur !";
-							}
-						}
+				if(!rs.next())return "§cUtilisateur "+args[0]+" non trouvé";
+				User u = manager.getUser(UUID.fromString(rs.getString("uuid")));
+				if(u==null){
+					try{
+						u = manager.loadUser(PlayerUtils.getUUID("Stargeyt")).get();
+					}catch(Exception e){
+						e.printStackTrace();
+						return "§cImpossible de charger les données de cet utilisateur ! (Erreur LuckPerms, contacte iTrooz_)";
 					}
+					if(u==null)return "§cImpossible de charger les données de cet utilisateur !";
 				}
 
 				SanctionEntry se = new SanctionEntry();
@@ -74,13 +61,10 @@ public class BanCmd extends Command {
 				if(se.reason.equals(""))se.reason = "Aucune";
 				se.when = new Date().getTime();
 
-				Main.sql.fastUpdate("INSERT INTO actuals (banned, by, type, when, time, reason) VALUES" +
+				Main.sql.fastUpdate("INSERT INTO playerdata.global (banned, by, type, when, time, reason) VALUES" +
 						"(?, ?, ?, ?, ?, ?)", se.banned, se.by, 1, se.when, se.time, se.reason);
 
 				Utils.bans.add(se);
-
-				sender.sendMessage(ChatComponent.create("Banni avec succès !"));
-
 			}catch(SQLException e){
 				e.printStackTrace();
 				Main.sql.broadcastError();
