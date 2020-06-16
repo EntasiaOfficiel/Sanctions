@@ -5,6 +5,7 @@ import fr.entasia.apis.TextUtils;
 import net.md_5.bungee.api.chat.HoverEvent;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class SanctionEntry {
 
@@ -40,6 +41,10 @@ public class SanctionEntry {
 		String b = String.valueOf(when.get(a)+add);
 		if(b.length()==1)return "0"+b;
 		else return b;
+	}
+
+	public String remaning(){
+		return TextUtils.secondsToTime((int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000));
 	}
 
 

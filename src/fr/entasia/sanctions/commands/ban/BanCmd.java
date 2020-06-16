@@ -10,6 +10,7 @@ import me.lucko.luckperms.api.manager.UserManager;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.net.InetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -41,7 +42,7 @@ public class BanCmd extends Command {
 			return "§cSyntaxe : /"+cmd+" <pseudo> <temps/def> [raison]";
 		}else{
 			try{
-				ResultSet rs = Main.sql.fastSelectUnsafe("SELECT name,uuid FROM playerdata.global WHERE name=?", args[0]);
+				ResultSet rs = Main.sql.fastSelectUnsafe("SELECT name,uuid,address FROM playerdata.global WHERE name=?", args[0]);
 				if(rs.next()) {
 					UUID uuid = UUID.fromString(rs.getString("uuid"));
 					User u = manager.getUser(uuid);
@@ -67,6 +68,7 @@ public class BanCmd extends Command {
 				if(se.time<=0)return "§cTemps "+args[1]+" invalide !";
 
 				se.on = rs.getString("name");
+				se.ip = InetAddress.getByName(rs.getString("address")).getAddress();
 				se.by = sender.getName();
 				se.reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
 				if(se.reason.equals(""))se.reason = "Aucune";
@@ -80,7 +82,7 @@ public class BanCmd extends Command {
 								se.id, se.on, se.by, 1, se.when.getTimeInMillis(), se.time, se.reason);
 						break;
 					}catch(SQLException e){
-						// qui à une meilleur idée pour détecter les erreurs de clés primaires ?
+						// qui à une meilleur idée pour détecter les erreurs de clés primaires ? me mp
 						if(!(e.getMessage().contains("Duplicate")&&e.getMessage().contains("PRIMARY"))){
 							throw e;
 						}
@@ -100,7 +102,9 @@ public class BanCmd extends Command {
 			}catch(SQLException e){
 				e.printStackTrace();
 				Main.sql.broadcastError();
-				return "§cUne erreur SQL s'est produite !";
+				return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
+			}catch(Exception e){
+				return "§cUne erreur interne s'est produite ! Contacte iTrooz_ !";
 			}
 		}
 	}
