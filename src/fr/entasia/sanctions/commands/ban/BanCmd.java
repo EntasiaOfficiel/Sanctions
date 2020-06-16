@@ -4,7 +4,6 @@ import fr.entasia.apis.ChatComponent;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.utils.SanctionEntry;
 import fr.entasia.sanctions.Utils;
-import fr.entasia.sanctions.utils.SanctionTypes;
 import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
@@ -94,7 +93,7 @@ public class BanCmd extends Command {
 				Main.sql.fastUpdate("INSERT INTO modifiers (`id`, `by`, `when`, `new_time`, `new_reason`) VALUES " +
 						"(?, ?, ?, ?, ?)", se.id, se.by, se.when.getTimeInMillis(), se.time, se.reason);
 
-				SanctionTypes.BAN.entries.add(se);
+				Utils.bans.add(se);
 
 				return "§c"+se.on +" à été banni avec succès !";
 

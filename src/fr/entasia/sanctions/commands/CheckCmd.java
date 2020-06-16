@@ -25,10 +25,10 @@ public class CheckCmd extends Command {
 				boolean nop = true;
 				if(args[0].contains(".")){
 					try{
-						byte[] a = InetAddress.getByName(args[0]).getAddress();
+						byte[] ip = InetAddress.getByName(args[0]).getAddress();
 						sender.sendMessage(ChatComponent.create("§cSanctions actuelles de l'IP "+args[0]+" :"));
 						for(SanctionEntry se : Utils.bans) {
-							if(Arrays.equals(se.ip, a)) {
+							if(Arrays.equals(se.ip, ip)) {
 								nop = false;
 								comp.append("§cOui "+Main.c);
 								comp.setHoverEvent(se.getHover());
