@@ -1,21 +1,20 @@
-package fr.entasia.sanctions.commands;
+package fr.entasia.sanctions.commands.ban;
 
 import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.PlayerUtils;
 import fr.entasia.sanctions.Main;
-import fr.entasia.sanctions.SanctionEntry;
+import fr.entasia.sanctions.utils.SanctionEntry;
 import fr.entasia.sanctions.Utils;
+import fr.entasia.sanctions.utils.SanctionTypes;
 import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
-import me.lucko.luckperms.common.node.factory.NodeBuilder;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.UUID;
 
 public class BanCmd extends Command {
@@ -68,29 +67,43 @@ public class BanCmd extends Command {
 				se.time = Utils.parseTime(args[1]);
 				if(se.time<=0)return "§cTemps "+args[1]+" invalide !";
 
-				se.banned = rs.getString("name");
+				se.on = rs.getString("name");
 				se.by = sender.getName();
 				se.reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
 				if(se.reason.equals(""))se.reason = "Aucune";
-				se.when = new Date().getTime();
+				se.when = Calendar.getInstance();
 
-				Main.sql.fastUpdate("INSERT INTO actuals (banned, by, type, when, time, reason) VALUES" +
-						"(?, ?, ?, ?, ?, ?)", se.banned, se.by, 1, se.when, se.time, se.reason);
 
-				Utils.bans.add(se);
+				while(true){
+					se.id = Utils.genID();
+					try{
+						Main.sql.fastUpdateUnsafe("INSERT INTO actuals (`id`, `banned`, `by`, `type`, `when`, `time`, `reason`) VALUES (?, ?, ?, ?, ?, ?, ?)",
+								se.id, se.on, se.by, 1, se.when.getTimeInMillis(), se.time, se.reason);
+						break;
+					}catch(SQLException e){
+						// qui à une meilleur idée pour détecter les erreurs de clés primaires ?
+						if(!(e.getMessage().contains("Duplicate")&&e.getMessage().contains("PRIMARY"))){
+							throw e;
+						}
+					}
+				}
 
-				sender.sendMessage(ChatComponent.create("Banni avec succès !"));
+				Main.sql.fastUpdate("INSERT INTO history (`id`, `banned`, `by`, `type`, `when`) VALUES " +
+						"(?, ?, ?, ?, ?)", se.id, se.on, se.by, 1, se.when.getTimeInMillis());
+
+				Main.sql.fastUpdate("INSERT INTO modifiers (`id`, `by`, `when`, `new_time`, `new_reason`) VALUES " +
+						"(?, ?, ?, ?, ?)", se.id, se.by, se.when.getTimeInMillis(), se.time, se.reason);
+
+				SanctionTypes.BAN.entries.add(se);
+
+				return "§c"+se.on +" à été banni avec succès !";
 
 			}catch(SQLException e){
 				e.printStackTrace();
 				Main.sql.broadcastError();
 				return "§cUne erreur SQL s'est produite !";
 			}
-
 		}
-
-
-		return "§cUne erreur interne s'est produite ! Contacte iTrooz_ !";
 	}
 
 	public static UserManager manager = Main.lpAPI.getUserManager();

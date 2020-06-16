@@ -1,13 +1,14 @@
 package fr.entasia.sanctions;
 
+import fr.entasia.sanctions.utils.SanctionEntry;
+
 import java.util.ArrayList;
 
 public class Utils {
 
+	public static ArrayList<SanctionEntry> bans = new ArrayList<>();
 	public static ArrayList<SanctionEntry> warns = new ArrayList<>();
 	public static ArrayList<SanctionEntry> mutes = new ArrayList<>();
-	public static ArrayList<SanctionEntry> bans = new ArrayList<>();
-	public static ArrayList<SanctionEntry> ipbans = new ArrayList<>();
 
 
 	public static int parseTime(String timeStr){
@@ -78,7 +79,7 @@ public class Utils {
 			case "m":{
 				m *= 60;
 			}
-			case "ssec":
+			case "sec":
 			case "s":{
 				break;
 			}
@@ -87,6 +88,11 @@ public class Utils {
 			}
 		}
 		return m;
+	}
+
+
+	public static int genID(){
+		return Main.random.nextInt(0x7FFFFFFF);
 	}
 
 

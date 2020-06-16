@@ -1,13 +1,14 @@
-package fr.entasia.sanctions.commands;
+package fr.entasia.sanctions.commands.ban;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.sanctions.commands.ban.BanCmd;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
-public class SilentIPBanCmd extends Command {
+public class SilentBanCmd extends Command {
 
-	public SilentIPBanCmd() {
-		super("sbanip", null, "sipban");
+	public SilentBanCmd() {
+		super("sban");
 	}
 
 	@Override

@@ -11,16 +11,12 @@ import java.util.concurrent.ExecutionException;
 public class TestCmd extends Command {
 
 	public TestCmd() {
-		super("test");
+		super("stop");
 	}
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		try {
-			System.out.println(Main.lpAPI.getUserManager().loadUser(PlayerUtils.getUUID("Stargeyt")).get().getPrimaryGroup());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Main.main.getProxy().stop();
 	}
 
 }

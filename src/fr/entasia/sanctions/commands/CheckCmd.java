@@ -1,23 +1,15 @@
 package fr.entasia.sanctions.commands;
 
 import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.PlayerUtils;
 import fr.entasia.sanctions.Main;
-import fr.entasia.sanctions.SanctionEntry;
 import fr.entasia.sanctions.Utils;
-import me.lucko.luckperms.api.User;
-import me.lucko.luckperms.api.manager.UserManager;
+import fr.entasia.sanctions.utils.SanctionEntry;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.UUID;
 
 public class CheckCmd extends Command {
 
@@ -29,63 +21,57 @@ public class CheckCmd extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		if(sender.hasPermission("sanctions.check")){
 			if(args.length==1){
-				try{
-					ResultSet rs;
-					if(args[0].contains(".")){
-						try{
-							InetAddress.getByName(args[0]);
-							rs = Main.sql.fastSelectUnsafe("SELECT * FROM actuals WHERE banned=?", args[0]);
-							if(rs.next()) {
-								sender.sendMessage(ChatComponent.create("§cSanctions sur cette adresse IP :"));
-							}else{
-								sender.sendMessage(ChatComponent.create("§cAucune sanction active sur cette adresse IP"));
-								return;
+				ChatComponent comp = new ChatComponent("§4- §cBanni : ");
+				boolean nop = true;
+				if(args[0].contains(".")){
+					try{
+						byte[] a = InetAddress.getByName(args[0]).getAddress();
+						sender.sendMessage(ChatComponent.create("§cSanctions actuelles de l'IP "+args[0]+" :"));
+						for(SanctionEntry se : Utils.bans) {
+							if(Arrays.equals(se.ip, a)) {
+								nop = false;
+								comp.append("§cOui "+Main.c);
+								comp.setHoverEvent(se.getHover());
+								break;
 							}
-						}catch (UnknownHostException e){
-							sender.sendMessage(ChatComponent.create("§cAdresse IP invalide !"));
-							return;
 						}
-					}else{
-						rs = Main.sql.fastSelectUnsafe("SELECT * FROM actuals WHERE banned=?", args[0]);
-						if(rs.next()){
-							sender.sendMessage(ChatComponent.create("§cSanctions sur ce pseudo:"));
-						}else{
-							sender.sendMessage(ChatComponent.create("§cAucune sanction active sur ce pseudo !"));
-							return;
+						if(nop)comp.append("§aNon");
+						sender.sendMessage(comp.create());
+					}catch (UnknownHostException e){
+						sender.sendMessage(ChatComponent.create("§cAdresse IP invalide !"));
+					}
+				}else{
+					sender.sendMessage(ChatComponent.create("§cSanctions actuelles du pseudo "+args[0]+" :"));
+					for(SanctionEntry se : Utils.bans) {
+						if(se.on.equals(args[0])) {
+							nop = false;
+							comp.append("§cOui "+Main.c);
+							comp.setHoverEvent(se.getHover());
+							break;
 						}
 					}
+					if(nop)comp.append("§aNon");
+					sender.sendMessage(comp.create());
 
-					SanctionEntry[] list = new SanctionEntry[4];
-
-					do{
-						byte a = rs.getByte("type");
-						list[a] = new SanctionEntry();
-						list[a].banned = rs.getString("banned");
-						list[a].by = rs.getString("by");
-						list[a].when = rs.getLong("when");
-						list[a].time = rs.getInt("time");
-						list[a].reason = rs.getString("reason");
-					}while(rs.next());
-
-					String[] l = new String[]{"ipban", "ban", "mute", "warn"};
-
-					ChatComponent comp;
-					for(int i=0;i<4;i++){
-						comp = new ChatComponent("§4- §c"+l[i]);
-						comp.setHoverEvent(list[i].getHover());
+					comp = new ChatComponent("§4- §cMuté : ");
+					nop = true;
+					for(SanctionEntry se : Utils.mutes) {
+						if(se.on.equals(args[0])) {
+							nop = false;
+							comp.append("§cOui "+Main.c);
+							comp.setHoverEvent(se.getHover());
+							break;
+						}
 					}
+					if(nop)comp.append("§aNon");
+					sender.sendMessage(comp.create());
 
 
-				}catch(SQLException e){
-					e.printStackTrace();
-					Main.sql.broadcastError();
-					sender.sendMessage(ChatComponent.create("§cUne erreur interne est survenue ! Préviens iTrooz_"));
 				}
+
 			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /check <pseudo/IP>"));
 
 
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
-
-	public static UserManager manager = Main.lpAPI.getUserManager();
 }
