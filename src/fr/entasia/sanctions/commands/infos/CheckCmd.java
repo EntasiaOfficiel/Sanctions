@@ -1,4 +1,4 @@
-package fr.entasia.sanctions.commands;
+package fr.entasia.sanctions.commands.infos;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.sanctions.Main;

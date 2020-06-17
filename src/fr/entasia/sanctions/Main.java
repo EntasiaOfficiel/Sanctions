@@ -1,16 +1,17 @@
 package fr.entasia.sanctions;
 
 import fr.entasia.apis.sql.SQLConnection;
-import fr.entasia.sanctions.commands.CheckCmd;
-import fr.entasia.sanctions.commands.HistoryCmd;
+import fr.entasia.sanctions.commands.infos.BanListCmd;
+import fr.entasia.sanctions.commands.infos.CheckCmd;
+import fr.entasia.sanctions.commands.infos.HistoryCmd;
 import fr.entasia.sanctions.commands.StopCmd;
 import fr.entasia.sanctions.commands.ban.BanCmd;
 import fr.entasia.sanctions.commands.ban.SilentBanCmd;
 import fr.entasia.sanctions.commands.ban.UnbanCmd;
 import fr.entasia.sanctions.commands.mute.MuteCmd;
 import fr.entasia.sanctions.commands.mute.SilentMuteCmd;
-import fr.entasia.sanctions.commands.others.SilentWarnCmd;
-import fr.entasia.sanctions.commands.others.WarnCmd;
+import fr.entasia.sanctions.commands.mute.UnmuteCmd;
+import fr.entasia.sanctions.commands.others.KickCmd;
 import fr.entasia.sanctions.listeners.Base;
 import fr.entasia.sanctions.utils.SanctionEntry;
 import me.lucko.luckperms.LuckPerms;
@@ -28,7 +29,7 @@ public class Main extends Plugin {
 	/*
 	0 - ban
 	1 - mute
-	2 - warn
+	2 - kick
 	 */
 
 	public static final char c = '♧';
@@ -53,13 +54,17 @@ public class Main extends Plugin {
 
 			getProxy().getPluginManager().registerCommand(this, new CheckCmd());
 			getProxy().getPluginManager().registerCommand(this, new HistoryCmd());
+			getProxy().getPluginManager().registerCommand(this, new BanListCmd());
+
 			getProxy().getPluginManager().registerCommand(this, new BanCmd());
 			getProxy().getPluginManager().registerCommand(this, new SilentBanCmd());
 			getProxy().getPluginManager().registerCommand(this, new UnbanCmd());
+
 			getProxy().getPluginManager().registerCommand(this, new MuteCmd());
 			getProxy().getPluginManager().registerCommand(this, new SilentMuteCmd());
-			getProxy().getPluginManager().registerCommand(this, new WarnCmd());
-			getProxy().getPluginManager().registerCommand(this, new SilentWarnCmd());
+			getProxy().getPluginManager().registerCommand(this, new UnmuteCmd());
+
+			getProxy().getPluginManager().registerCommand(this, new KickCmd());
 
 			ResultSet rs = sql.fastSelectUnsafe(
 					"SELECT playerdata.global.address, sanctions.actuals.* FROM actuals INNER JOIN playerdata.global ON sanctions.actuals.on = playerdata.global.name"
@@ -85,10 +90,6 @@ public class Main extends Plugin {
 						Utils.mutes.add(se);
 						break;
 					}
-//					case 2:{
-//						SanctionTypes.WA.add(se);
-//						break;
-//					}
 					default:{
 						getLogger().warning("ID de type invalide : "+rs.getByte("type"));
 						break;

@@ -1,4 +1,4 @@
-package fr.entasia.sanctions.commands;
+package fr.entasia.sanctions.commands.infos;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.sanctions.Main;
@@ -6,9 +6,9 @@ import me.lucko.luckperms.api.manager.UserManager;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
-public class HistoryCmd extends Command {
+public class BanListCmd extends Command {
 
-	public HistoryCmd() {
+	public BanListCmd() {
 		super("history");
 	}
 

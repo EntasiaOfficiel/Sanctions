@@ -10,9 +10,23 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class Base implements Listener {
+
+	public static ChatComponent genBanReason(SanctionEntry se){
+		return new ChatComponent(
+				"§c§m----§c  Tu es banni d'§bEnta§7sia§c ! (pas cool ca)  §c§m----",
+				" ",
+				"§cPar : §7"+se.by,
+				"§cLe : §7"+se.formatWhen(),
+				"§cExpiration dans : §7"+se.remaning(),
+				"§cBanni pour la raison : §7"+se.reason,
+				" ",
+				" ",
+				"§cUne réclamation à faire ? Contacte nous sur notre Discord :§6 https://discord.gg/fp9PFP9 §c|§6 https://entasia.fr/discord");
+	}
 
 	@EventHandler(priority = -120)
 	public void ban(PreLoginEvent e){
@@ -21,18 +35,7 @@ public class Base implements Listener {
 		for(SanctionEntry se : Utils.bans){
 			if(name.equals(se.on)|| Arrays.equals(ip, se.ip)){
 				e.setCancelled(true);
-				ChatComponent cc = new ChatComponent(
-						"§c§m----§c  Tu es banni d'§bEnta§7sia§c ! (pas cool ca)  §c§m----",
-						" ",
-						"§cPar : §7"+se.by,
-						"§cLe : §7"+se.formatWhen(),
-						"§cExpiration dans : §7"+se.remaning(),
-						"§cBanni pour la raison : §7"+se.reason,
-						" ",
-						" ",
-						"§cUne réclamation à faire ? Contacte nous sur notre Discord :§6 https://discord.gg/fp9PFP9 §c|§6 https://entasia.fr/discord");
-				e.setCancelReason(cc.create());
-
+				e.setCancelReason(genBanReason(se).create());
 				return;
 			}
 		}

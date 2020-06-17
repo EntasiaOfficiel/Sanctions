@@ -3,11 +3,13 @@ package fr.entasia.sanctions.commands.ban;
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
+import fr.entasia.sanctions.listeners.Base;
 import fr.entasia.sanctions.utils.SanctionEntry;
 import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.net.InetAddress;
@@ -62,8 +64,11 @@ public class BanCmd extends Command {
 
 				SanctionEntry se = new SanctionEntry();
 
-				se.time = Utils.parseTime(args[1]);
-				if(se.time<=0)return "§cTemps "+args[1]+" invalide !";
+				if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))se.time = -1;
+				else{
+					se.time = Utils.parseTime(args[1]);
+					if(se.time<=0)return "§cTemps "+args[1]+" invalide !";
+				}
 
 				se.on = rs.getString("name");
 				se.ip = InetAddress.getByName(rs.getString("address")).getAddress();
@@ -73,27 +78,15 @@ public class BanCmd extends Command {
 				se.when = Calendar.getInstance();
 
 
-				while(true){
-					se.id = Utils.genID();
-					try{
-						Main.sql.fastUpdateUnsafe("INSERT INTO actuals (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES (?, ?, ?, ?, ?, ?, ?)",
-								se.id, se.on, se.by, 0, se.when.getTimeInMillis(), se.time, se.reason);
-						break;
-					}catch(SQLException e){
-						// qui à une meilleur idée pour détecter les erreurs de clés primaires ?
-						if(!(e.getMessage().contains("Duplicate")&&e.getMessage().contains("PRIMARY"))){
-							throw e;
-						}
-					}
-				}
+				se.id = Utils.requ(1,"INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
+						"(?, ?, ?, ?, ?, ?, ?)", se.on, se.by, 0, se.when.getTimeInMillis(), se.time, se.reason);
 
-				Main.sql.fastUpdate("INSERT INTO history (`id`, `on`, `by`, `type`, `when`) VALUES " +
-						"(?, ?, ?, ?, ?)", se.id, se.on, se.by, 0, se.when.getTimeInMillis());
-
-				Main.sql.fastUpdate("INSERT INTO modifiers (`id`, `by`, `when`, `new_time`, `new_reason`) VALUES " +
-						"(?, ?, ?, ?, ?)", se.id, se.by, se.when.getTimeInMillis(), se.time, se.reason);
+				Main.sql.fastUpdate("INSERT INTO actuals (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
+						"(?, ?, ?, ?, ?, ?, ?)", se.id, se.on, se.by, 0, se.when.getTimeInMillis(), se.time, se.reason);
 
 				Utils.bans.add(se);
+				ProxiedPlayer p = Main.main.getProxy().getPlayer(rs.getString("name"));
+				p.disconnect(Base.genBanReason(se).create());
 
 				return "§c"+se.on +" à été banni avec succès !";
 

@@ -45,6 +45,7 @@ public class SanctionEntry {
 	}
 
 	public String remaning(){
-		return TextUtils.secondsToTime((int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000));
+		if(time==-1)return "Indéfini";
+		else return TextUtils.secondsToTime((int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000));
 	}
 }

@@ -1,4 +1,4 @@
-package fr.entasia.sanctions.commands.ban;
+package fr.entasia.sanctions.commands.mute;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.sanctions.Main;
@@ -11,9 +11,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-public class UnbanCmd extends Command {
+public class UnmuteCmd extends Command {
 
-	public UnbanCmd() {
+	public UnmuteCmd() {
 		super("unban");
 	}
 
