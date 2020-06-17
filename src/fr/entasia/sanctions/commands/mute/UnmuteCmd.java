@@ -1,6 +1,7 @@
 package fr.entasia.sanctions.commands.mute;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.ServerUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.SanctionEntry;
@@ -10,17 +11,18 @@ import net.md_5.bungee.api.plugin.Command;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Date;
 
 public class UnmuteCmd extends Command {
 
 	public UnmuteCmd() {
-		super("unban");
+		super("unmute");
 	}
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(sender.hasPermission("sanctions.unban")){
-			if(args.length==1){
+		if(sender.hasPermission("sanctions.use.unmute")){
+			if(args.length>0){
 				SanctionEntry se = null;
 				if(args[0].contains(".")){
 					try {
@@ -51,7 +53,7 @@ public class UnmuteCmd extends Command {
 				if(se==null)return;
 
 				if (!se.by.equals(sender.getName())){
-					if (sender.hasPermission("sanctions.override.ban")) {
+					if (sender.hasPermission("sanctions.override.unmute")) {
 						sender.sendMessage(ChatComponent.create("§4Attention : tu modifie une sanction qui n'est pas la tienne"));
 					}else{
 						sender.sendMessage(ChatComponent.create("§cTu ne peux pas modifier cette sanction car elle à été faite par "+se.by+" !"));
@@ -59,17 +61,24 @@ public class UnmuteCmd extends Command {
 					}
 				}
 
-				String s;
-				if(args.length==1)s = "Aucune";
-				else s = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+				String reason;
+				if(args.length==1)reason = "Aucune";
+				else reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
-				Utils.bans.remove(se);
-				if(Main.sql.fastUpdate("DELETE FROM actuals WHERE on=?", se.on)==-1){
+				Utils.mutes.remove(se);
+				if(Main.sql.fastUpdate("DELETE FROM actuals WHERE `on`=?", se.on)==-1||
+						Main.sql.fastUpdate("UPDATE actuals SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
+								sender.getName(), new Date().getTime(), reason, se.id)==-1){
 					sender.sendMessage(ChatComponent.create("§cUne erreur SQL s'est produite !"));
 				}else {
-					sender.sendMessage(ChatComponent.create("§c" + se.on + " à été débanni avec succès !"));
+
+					ChatComponent cc = new ChatComponent("§c§lUnmute§c : §8"+sender.getName()+"§c à démuté §8"+se.on+"§c !"+Main.c);
+					cc.setHoverEvent(se.getHover());
+					ServerUtils.permMsg("sanctions.notify.unmute", cc.create());
+
+					sender.sendMessage(ChatComponent.create("§c" + se.on + " à été démuté avec succès !"));
 				}
-			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /unban <player>"));
+			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /unmute <player>"));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 }

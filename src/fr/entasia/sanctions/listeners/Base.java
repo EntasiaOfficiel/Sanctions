@@ -17,12 +17,12 @@ public class Base implements Listener {
 
 	public static ChatComponent genBanReason(SanctionEntry se){
 		return new ChatComponent(
-				"§c§m----§c  Tu es banni d'§bEnta§7sia§c ! (pas cool ca)  §c§m----",
+				"§c§m----§c  Tu es banni d'§bEnta§8sia§c ! (pas cool ca)  §c§m----",
 				" ",
-				"§cPar : §7"+se.by,
-				"§cLe : §7"+se.formatWhen(),
-				"§cExpiration dans : §7"+se.remaning(),
-				"§cBanni pour la raison : §7"+se.reason,
+				"§cPar : §8"+se.by,
+				"§cLe : §8"+se.formatWhen(),
+				"§cExpiration dans : §8"+se.remaning(),
+				"§cBanni pour la raison : §8"+se.reason,
 				" ",
 				" ",
 				"§cUne réclamation à faire ? Contacte nous sur notre Discord :§6 https://discord.gg/fp9PFP9 §c|§6 https://entasia.fr/discord");
@@ -47,7 +47,7 @@ public class Base implements Listener {
 		for(SanctionEntry se : Utils.mutes) {
 			if (name.equals(se.on)){
 				e.setCancelled(true);
-				((ProxiedPlayer) e.getSender()).sendMessage(ChatComponent.create("§cTu es encore muté pour "+se.remaning()+" !"));
+				((ProxiedPlayer) e.getSender()).sendMessage(ChatComponent.create("§cTu es encore muté pour §8"+se.remaning()+"§c !"));
 				return;
 			}
 		}

@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class Utils {
 
 	public static ArrayList<SanctionEntry> bans = new ArrayList<>();
-	public static ArrayList<SanctionEntry> warns = new ArrayList<>();
 	public static ArrayList<SanctionEntry> mutes = new ArrayList<>();
+
 
 	public static int parseTime(String timeStr){
 		int time = 0;

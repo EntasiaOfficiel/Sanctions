@@ -1,6 +1,7 @@
 package fr.entasia.sanctions.commands.ban;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.ServerUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.SanctionEntry;
@@ -10,6 +11,7 @@ import net.md_5.bungee.api.plugin.Command;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Date;
 
 public class UnbanCmd extends Command {
 
@@ -19,8 +21,8 @@ public class UnbanCmd extends Command {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(sender.hasPermission("sanctions.unban")){
-			if(args.length==1){
+		if(sender.hasPermission("sanctions.use.unban")){
+			if(args.length>0){
 				SanctionEntry se = null;
 				if(args[0].contains(".")){
 					try {
@@ -59,14 +61,21 @@ public class UnbanCmd extends Command {
 					}
 				}
 
-				String s;
-				if(args.length==1)s = "Aucune";
-				else s = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+				String reason;
+				if(args.length==1)reason = "Aucune";
+				else reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
 				Utils.bans.remove(se);
-				if(Main.sql.fastUpdate("DELETE FROM actuals WHERE on=?", se.on)==-1){
+				if(Main.sql.fastUpdate("DELETE FROM actuals WHERE `on`=?", se.on)==-1||
+						Main.sql.fastUpdate("UPDATE history SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
+								sender.getName(), new Date().getTime(), reason, se.id)==-1){
 					sender.sendMessage(ChatComponent.create("§cUne erreur SQL s'est produite !"));
 				}else {
+
+					ChatComponent cc = new ChatComponent("§c§lUnban§c : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c !"+Main.c);
+					cc.setHoverEvent(se.getHover());
+					ServerUtils.permMsg("sanctions.notify.unban", cc.create());
+
 					sender.sendMessage(ChatComponent.create("§c" + se.on + " à été débanni avec succès !"));
 				}
 			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /unban <player>"));

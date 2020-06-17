@@ -25,7 +25,7 @@ public class KickCmd extends Command {
 			if(args.length==0)sender.sendMessage(ChatComponent.create("§cSyntaxe : /kick <pseudo/IP> [raison]"));
 			else{
 				ProxiedPlayer target = Main.main.getProxy().getPlayer(args[0]);
-				if(target==null)sender.sendMessage(ChatComponent.create("§7"+args[0]+" §cn'est pas connecté ou n'existe pas !"));
+				if(target==null)sender.sendMessage(ChatComponent.create("§8"+args[0]+" §cn'est pas connecté ou n'existe pas !"));
 				else if(target.hasPermission("sanctions.except.kick")&&!sender.hasPermission("restricted.sancmaster")){
 					sender.sendMessage(ChatComponent.create("§cTu ne peux pas kick §8"+target.getName()+"§c !"));
 				}else{
@@ -34,15 +34,15 @@ public class KickCmd extends Command {
 					else reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 					ChatComponent cc = new ChatComponent("§c§m----§c  Tu à été kick !  §c§m----",
 							"",
-							"§cPar : §7"+sender.getName(),
-							"§cRaison : §7"+reason
+							"§cPar : §8"+sender.getName(),
+							"§cRaison : §8"+reason
 							);
 					target.disconnect(cc.create());
 
 					try{
 						Utils.requ(1,"INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
 							"(?, ?, ?, ?, ?, ?, ?)", target.getName(), sender.getName(), 2, new Date().getTime(), 0, reason);
-						sender.sendMessage(ChatComponent.create("§cTu as kick §7"+target.getName()+"§c !"));
+						sender.sendMessage(ChatComponent.create("§cTu as kick §8"+target.getName()+"§c !"));
 					}catch(SQLException e){
 						e.printStackTrace();
 						Main.sql.broadcastError();

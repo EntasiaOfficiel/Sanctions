@@ -13,8 +13,8 @@ public class SilentMuteCmd extends Command {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(sender.hasPermission("sanctions.mute")){
-			if(sender.hasPermission("sanctions.mute.silent")){
+		if(sender.hasPermission("sanctions.use.mute")){
+			if(sender.hasPermission("sanctions.use.mute.silent")){
 				sender.sendMessage(ChatComponent.create(MuteCmd.execMute(sender, args, false)));
 			}else sender.sendMessage(ChatComponent.create("§cTu n'as pas la permission de bannir silencieusement !"));
 

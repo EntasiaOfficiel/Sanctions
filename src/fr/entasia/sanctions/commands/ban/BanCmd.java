@@ -1,6 +1,7 @@
 package fr.entasia.sanctions.commands.ban;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.ServerUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.listeners.Base;
@@ -57,7 +58,8 @@ public class BanCmd extends Command {
 						}
 						if (u == null) return "§cImpossible de charger les données de cet utilisateur !";
 					}
-					if(u.hasPermission(banExcept).asBoolean()){
+					if(u.hasPermission(banExcept).asBoolean()&&!sender.hasPermission("restricted.sancmaster"
+					)){
 						return "§cTu ne peut pas bannir ce joueur !";
 					}
 				}
@@ -86,7 +88,18 @@ public class BanCmd extends Command {
 
 				Utils.bans.add(se);
 				ProxiedPlayer p = Main.main.getProxy().getPlayer(rs.getString("name"));
-				p.disconnect(Base.genBanReason(se).create());
+				if(p!=null)p.disconnect(Base.genBanReason(se).create());
+
+				if(silent){
+					ChatComponent cc = new ChatComponent("§cSanction §ldiscrète§c : §8"+sender.getName()+"§c à banni §8"+se.on+"§c ! "+Main.c);
+					cc.setHoverEvent(se.getHover());
+					ServerUtils.permMsg("sanctions.notify.ban", cc.create());
+				}else{
+					ChatComponent cc = new ChatComponent("§cSanction : §8"+sender.getName()+"§c à banni §8"+se.on+"§c ! "+Main.c);
+					cc.setHoverEvent(se.getHover());
+					Main.main.getProxy().broadcast(cc.create());
+				}
+
 
 				return "§c"+se.on +" à été banni avec succès !";
 
@@ -95,6 +108,7 @@ public class BanCmd extends Command {
 				Main.sql.broadcastError();
 				return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
 			}catch(Exception e){
+				e.printStackTrace();
 				return "§cUne erreur interne s'est produite ! Contacte iTrooz_ !";
 			}
 		}
