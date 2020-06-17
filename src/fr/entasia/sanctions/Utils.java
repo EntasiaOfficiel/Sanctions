@@ -10,7 +10,6 @@ public class Utils {
 	public static ArrayList<SanctionEntry> warns = new ArrayList<>();
 	public static ArrayList<SanctionEntry> mutes = new ArrayList<>();
 
-
 	public static int parseTime(String timeStr){
 		int time = 0;
 		boolean expectNumber = true;

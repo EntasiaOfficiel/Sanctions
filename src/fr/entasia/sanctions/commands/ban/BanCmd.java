@@ -2,8 +2,8 @@ package fr.entasia.sanctions.commands.ban;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.sanctions.Main;
-import fr.entasia.sanctions.utils.SanctionEntry;
 import fr.entasia.sanctions.Utils;
+import fr.entasia.sanctions.utils.SanctionEntry;
 import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
@@ -54,11 +54,9 @@ public class BanCmd extends Command {
 							return "§cImpossible de charger les données de cet utilisateur ! (Erreur LuckPerms, contacte iTrooz_)";
 						}
 						if (u == null) return "§cImpossible de charger les données de cet utilisateur !";
-						else{
-							if(u.hasPermission(banExcept).asBoolean()){
-								return "§cTu ne peut pas bannir cet utilisateur !";
-							}
-						}
+					}
+					if(u.hasPermission(banExcept).asBoolean()){
+						return "§cTu ne peut pas bannir cet utilisateur !";
 					}
 				}
 
@@ -78,19 +76,19 @@ public class BanCmd extends Command {
 				while(true){
 					se.id = Utils.genID();
 					try{
-						Main.sql.fastUpdateUnsafe("INSERT INTO actuals (`id`, `banned`, `by`, `type`, `when`, `time`, `reason`) VALUES (?, ?, ?, ?, ?, ?, ?)",
-								se.id, se.on, se.by, 1, se.when.getTimeInMillis(), se.time, se.reason);
+						Main.sql.fastUpdateUnsafe("INSERT INTO actuals (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES (?, ?, ?, ?, ?, ?, ?)",
+								se.id, se.on, se.by, 0, se.when.getTimeInMillis(), se.time, se.reason);
 						break;
 					}catch(SQLException e){
-						// qui à une meilleur idée pour détecter les erreurs de clés primaires ? me mp
+						// qui à une meilleur idée pour détecter les erreurs de clés primaires ?
 						if(!(e.getMessage().contains("Duplicate")&&e.getMessage().contains("PRIMARY"))){
 							throw e;
 						}
 					}
 				}
 
-				Main.sql.fastUpdate("INSERT INTO history (`id`, `banned`, `by`, `type`, `when`) VALUES " +
-						"(?, ?, ?, ?, ?)", se.id, se.on, se.by, 1, se.when.getTimeInMillis());
+				Main.sql.fastUpdate("INSERT INTO history (`id`, `on`, `by`, `type`, `when`) VALUES " +
+						"(?, ?, ?, ?, ?)", se.id, se.on, se.by, 0, se.when.getTimeInMillis());
 
 				Main.sql.fastUpdate("INSERT INTO modifiers (`id`, `by`, `when`, `new_time`, `new_reason`) VALUES " +
 						"(?, ?, ?, ?, ?)", se.id, se.by, se.when.getTimeInMillis(), se.time, se.reason);

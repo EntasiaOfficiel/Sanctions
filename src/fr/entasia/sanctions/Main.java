@@ -1,11 +1,11 @@
 package fr.entasia.sanctions;
 
 import fr.entasia.apis.sql.SQLConnection;
-import fr.entasia.sanctions.commands.*;
+import fr.entasia.sanctions.commands.CheckCmd;
+import fr.entasia.sanctions.commands.HistoryCmd;
+import fr.entasia.sanctions.commands.StopCmd;
 import fr.entasia.sanctions.commands.ban.BanCmd;
-import fr.entasia.sanctions.commands.ban.IPBanCmd;
 import fr.entasia.sanctions.commands.ban.SilentBanCmd;
-import fr.entasia.sanctions.commands.ban.SilentIPBanCmd;
 import fr.entasia.sanctions.commands.others.MuteCmd;
 import fr.entasia.sanctions.commands.others.SilentMuteCmd;
 import fr.entasia.sanctions.commands.others.SilentWarnCmd;
@@ -48,25 +48,25 @@ public class Main extends Plugin {
 
 			getProxy().getPluginManager().registerListener(this, new Base());
 
-			getProxy().getPluginManager().registerCommand(this, new TestCmd());
+			getProxy().getPluginManager().registerCommand(this, new StopCmd());
 
 			getProxy().getPluginManager().registerCommand(this, new CheckCmd());
 			getProxy().getPluginManager().registerCommand(this, new HistoryCmd());
 			getProxy().getPluginManager().registerCommand(this, new BanCmd());
 			getProxy().getPluginManager().registerCommand(this, new SilentBanCmd());
-			getProxy().getPluginManager().registerCommand(this, new IPBanCmd());
-			getProxy().getPluginManager().registerCommand(this, new SilentIPBanCmd());
 			getProxy().getPluginManager().registerCommand(this, new MuteCmd());
 			getProxy().getPluginManager().registerCommand(this, new SilentMuteCmd());
 			getProxy().getPluginManager().registerCommand(this, new WarnCmd());
 			getProxy().getPluginManager().registerCommand(this, new SilentWarnCmd());
 
-			ResultSet rs = sql.fastSelectUnsafe("SELECT global.address, * FROM actuals INNER JOIN global ON actuals.on = actuals.name");
+			ResultSet rs = sql.fastSelectUnsafe(
+					"SELECT playerdata.global.address, sanctions.actuals.* FROM actuals INNER JOIN playerdata.global ON sanctions.actuals.on = playerdata.global.name"
+			);
 			SanctionEntry se;
 			while(rs.next()){
 				se = new SanctionEntry();
 				se.id = rs.getInt("id");
-				se.on = rs.getString("banned");
+				se.on = rs.getString("on");
 				se.by = rs.getString("by");
 				se.when = Calendar.getInstance();
 				se.when.setTimeInMillis(rs.getLong("when"));

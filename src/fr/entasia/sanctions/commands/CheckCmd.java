@@ -43,7 +43,7 @@ public class CheckCmd extends Command {
 				}else{
 					sender.sendMessage(ChatComponent.create("§cSanctions actuelles du pseudo "+args[0]+" :"));
 					for(SanctionEntry se : Utils.bans) {
-						if(se.on.equals(args[0])) {
+						if(args[0].equals(se.on)){
 							nop = false;
 							comp.append("§cOui "+Main.c);
 							comp.setHoverEvent(se.getHover());
@@ -56,7 +56,7 @@ public class CheckCmd extends Command {
 					comp = new ChatComponent("§4- §cMuté : ");
 					nop = true;
 					for(SanctionEntry se : Utils.mutes) {
-						if(se.on.equals(args[0])) {
+						if(args[0].equals(se.on)) {
 							nop = false;
 							comp.append("§cOui "+Main.c);
 							comp.setHoverEvent(se.getHover());

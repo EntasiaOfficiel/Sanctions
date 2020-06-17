@@ -1,16 +1,12 @@
 package fr.entasia.sanctions.commands;
 
-import fr.entasia.apis.PlayerUtils;
 import fr.entasia.sanctions.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
+public class StopCmd extends Command {
 
-public class TestCmd extends Command {
-
-	public TestCmd() {
+	public StopCmd() {
 		super("stop");
 	}
 

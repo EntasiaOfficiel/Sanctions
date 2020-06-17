@@ -1,18 +1,16 @@
 package fr.entasia.sanctions.listeners;
 
 import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.SanctionEntry;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import java.util.Arrays;
-import java.util.Date;
 
 public class Base implements Listener {
 
@@ -21,10 +19,10 @@ public class Base implements Listener {
 		String name = e.getConnection().getName();
 		byte[] ip = e.getConnection().getAddress().getAddress().getAddress();
 		for(SanctionEntry se : Utils.bans){
-			if(se.on.equals(name)|| Arrays.equals(ip, se.ip)){
+			if(name.equals(se.on)|| Arrays.equals(ip, se.ip)){
 				e.setCancelled(true);
 				ChatComponent cc = new ChatComponent(
-						"§c§m-----§c  Tu es banni d'§bEnta§7sia§c ! (pas cool ca)  §c§m-----",
+						"§c§m----§c  Tu es banni d'§bEnta§7sia§c ! (pas cool ca)  §c§m----",
 						" ",
 						"§cPar : §7"+se.by,
 						"§cLe : §7"+se.formatWhen(),
@@ -44,7 +42,7 @@ public class Base implements Listener {
 	public void ban(ChatEvent e){
 		String name = ((ProxiedPlayer) e.getSender()).getName();
 		for(SanctionEntry se : Utils.mutes) {
-			if (se.on.equals(name)){
+			if (name.equals(se.on)){
 				e.setCancelled(true);
 				((ProxiedPlayer) e.getSender()).sendMessage(ChatComponent.create("§cTu es encore muté pour "+se.remaning()+" !"));
 				return;
