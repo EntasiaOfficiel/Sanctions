@@ -20,7 +20,7 @@ import java.util.UUID;
 public class BanCmd extends Command {
 
 
-	private static final Node banExcept = Main.lpAPI.buildNode("sanctions.ban.except").build();
+	private static final Node banExcept = Main.lpAPI.buildNode("sanctions.except.ban").build();
 
 
 	public BanCmd() {
@@ -29,7 +29,7 @@ public class BanCmd extends Command {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(sender.hasPermission("sanctions.ban")){
+		if(sender.hasPermission("sanctions.use.ban")){
 			sender.sendMessage(ChatComponent.create(execBan(sender, args, false)));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
@@ -56,7 +56,7 @@ public class BanCmd extends Command {
 						if (u == null) return "§cImpossible de charger les données de cet utilisateur !";
 					}
 					if(u.hasPermission(banExcept).asBoolean()){
-						return "§cTu ne peut pas bannir cet utilisateur !";
+						return "§cTu ne peut pas bannir ce joueur !";
 					}
 				}
 

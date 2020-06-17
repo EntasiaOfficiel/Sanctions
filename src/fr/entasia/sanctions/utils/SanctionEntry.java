@@ -2,6 +2,7 @@ package fr.entasia.sanctions.utils;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.TextUtils;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.HoverEvent;
 
 import java.util.Calendar;
@@ -46,6 +47,4 @@ public class SanctionEntry {
 	public String remaning(){
 		return TextUtils.secondsToTime((int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000));
 	}
-
-
 }

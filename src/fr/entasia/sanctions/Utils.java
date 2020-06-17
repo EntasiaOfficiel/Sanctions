@@ -1,6 +1,8 @@
 package fr.entasia.sanctions;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.sanctions.utils.SanctionEntry;
+import net.md_5.bungee.api.CommandSender;
 
 import java.util.ArrayList;
 
@@ -93,6 +95,5 @@ public class Utils {
 	public static int genID(){
 		return Main.random.nextInt(0x7FFFFFFF);
 	}
-
 
 }

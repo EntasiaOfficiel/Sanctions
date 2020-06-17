@@ -1,10 +1,14 @@
-package fr.entasia.sanctions.commands.others;
+package fr.entasia.sanctions.commands.mute;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.sanctions.Main;
+import me.lucko.luckperms.api.Node;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
 public class MuteCmd extends Command {
+
+	private static final Node muteExcept = Main.lpAPI.buildNode("sanctions.except.ban").build();
 
 	public MuteCmd() {
 		super("mute");

@@ -12,8 +12,8 @@ public class SilentBanCmd extends Command {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(sender.hasPermission("sanctions.ban")){
-			if(sender.hasPermission("sanctions.ban.silent")){
+		if(sender.hasPermission("sanctions.use.ban")){
+			if(sender.hasPermission("sanctions.use.ban.silent")){
 				sender.sendMessage(ChatComponent.create(BanCmd.execBan(sender, args, false)));
 			}else sender.sendMessage(ChatComponent.create("§cTu n'as pas la permission de bannir silencieusement !"));
 
