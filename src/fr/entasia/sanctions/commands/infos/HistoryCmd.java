@@ -44,7 +44,7 @@ public class HistoryCmd extends Command {
 							se.time = rs.getInt("time");
 							se.reason = rs.getString("reason");
 
-							cc = new ChatComponent("§c" + TextUtils.formatCalendar(se.when) + " §8" + (rs.getByte("type") == 0 ? "Ban" : "Mute"));
+							cc = new ChatComponent("§c" + TextUtils.formatCalendar(se.when) + " §8" + (rs.getByte("type") == 0 ? "Ban" : "Mute")+" "+Main.c);
 							h = se.getInfos();
 							a = rs.getString("unban_by");
 							if (a != null) {

@@ -20,6 +20,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.net.InetAddress;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -40,6 +41,8 @@ public class Main extends Plugin {
 
 	public static Random random = new Random();
 
+	public static final ArrayList<String> cmdcompletes = new ArrayList<>();
+
 	@Override
 	public void onEnable(){
 		try{
@@ -53,8 +56,8 @@ public class Main extends Plugin {
 			getProxy().getPluginManager().registerCommand(this, new StopCmd());
 
 			getProxy().getPluginManager().registerCommand(this, new CheckCmd());
-			getProxy().getPluginManager().registerCommand(this, new HistoryCmd());
 			getProxy().getPluginManager().registerCommand(this, new BanListCmd());
+			getProxy().getPluginManager().registerCommand(this, new HistoryCmd());
 
 			getProxy().getPluginManager().registerCommand(this, new BanCmd());
 			getProxy().getPluginManager().registerCommand(this, new SilentBanCmd());
@@ -65,6 +68,17 @@ public class Main extends Plugin {
 			getProxy().getPluginManager().registerCommand(this, new UnmuteCmd());
 
 			getProxy().getPluginManager().registerCommand(this, new KickCmd());
+
+			cmdcompletes.add("check");
+			cmdcompletes.add("banlist");
+			cmdcompletes.add("history");
+			cmdcompletes.add("ban");
+			cmdcompletes.add("silentban");
+			cmdcompletes.add("unban");
+			cmdcompletes.add("mute");
+			cmdcompletes.add("silentmute");
+			cmdcompletes.add("unmute");
+			cmdcompletes.add("kick");
 
 			ResultSet rs = sql.fastSelectUnsafe(
 					"SELECT playerdata.global.address, sanctions.actuals.* FROM actuals INNER JOIN playerdata.global ON sanctions.actuals.on = playerdata.global.name"

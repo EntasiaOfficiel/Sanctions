@@ -8,6 +8,7 @@ import fr.entasia.sanctions.utils.SanctionEntry;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
+import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
@@ -75,7 +76,31 @@ public class Base implements Listener {
 				return;
 			}
 		}
+	}
 
+
+	private boolean isTabCmd(String value) {
+		for (String i : Main.cmdcompletes) {
+			if (value.equals(i)) return true;
+		}
+		return false;
+	}
+
+	@EventHandler
+	public void onTabComplete(TabCompleteEvent e) {
+		String[] a = e.getCursor().split(" ");
+		if(a[0].length()>1&&isTabCmd(a[0].substring(1).toLowerCase())){
+			if(a.length>1){
+				a[1] = a[1].toLowerCase();
+				for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
+					if(p.getDisplayName().toLowerCase().startsWith(a[1]))e.getSuggestions().add(p.getDisplayName());
+				}
+			}else{
+				for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
+					e.getSuggestions().add(p.getDisplayName());
+				}
+			}
+		}
 	}
 
 }
