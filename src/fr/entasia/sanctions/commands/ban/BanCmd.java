@@ -102,8 +102,6 @@ public class BanCmd extends Command {
 					cc.setHoverEvent(se.getHover());
 					Main.main.getProxy().broadcast(cc.create());
 				}
-
-
 				return "§c"+se.on +" à été banni avec succès !";
 
 			}catch(SQLException e){

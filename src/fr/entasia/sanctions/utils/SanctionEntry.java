@@ -27,24 +27,21 @@ public class SanctionEntry {
 
 
 	public HoverEvent getHover(){
-		ChatComponent text = new ChatComponent(
+		return new HoverEvent(HoverEvent.Action.SHOW_TEXT, getInfos().create());
+	}
+
+	public ChatComponent getInfos(){
+		return new ChatComponent(
 				"§cInformations sur la sanction : ID: §4"+Integer.toHexString(id).toUpperCase(),
-				"§cSanctionné : "+ on,
-				"§cPar : "+by,
-				"§cQuand : "+formatWhen(),
-				"§cTemps : "+TextUtils.secondsToTime(time),
-				"§cRaison : "+reason);
-		return new HoverEvent(HoverEvent.Action.SHOW_TEXT, text.create());
+				"§cSanctionné : §8"+ on,
+				"§cPar : §8"+by,
+				"§cQuand : §8"+formatWhen(),
+				"§cTemps : §8"+TextUtils.secondsToTime(time),
+				"§cRaison : §8"+reason);
 	}
 
 	public String formatWhen(){
-		return get(Calendar.YEAR, 0)+"/"+get(Calendar.MONTH, 1)+"/"+get(Calendar.DAY_OF_MONTH, 0)+" "+get(Calendar.HOUR_OF_DAY, 0)+":"+get(Calendar.MINUTE, 0);
-	}
-
-	private String get(int a, int add){
-		String b = String.valueOf(when.get(a)+add);
-		if(b.length()==1)return "0"+b;
-		else return b;
+		return TextUtils.formatCalendar(when);
 	}
 
 	public int remaning(){
@@ -52,8 +49,7 @@ public class SanctionEntry {
 	}
 
 	public void SQLDelete(){
-		int a = Main.sql.fastUpdate("DELETE FROM actuals WHERE `on`=? and type=?", on, type);
-		System.out.println(a);
+		Main.sql.fastUpdate("DELETE FROM actuals WHERE `on`=? and type=?", on, type);
 	}
 
 }

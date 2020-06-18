@@ -65,10 +65,10 @@ public class UnbanCmd extends Command {
 				if(args.length==1)reason = "Aucune";
 				else reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
-				Utils.bans.remove(se);
 				se.SQLDelete();
 				Main.sql.fastUpdate("UPDATE history SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
 						sender.getName(), new Date().getTime(), reason, se.id);
+				Utils.bans.remove(se);
 				ChatComponent cc = new ChatComponent("§c§lUnban§c : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c !"+Main.c);
 				cc.setHoverEvent(se.getHover());
 				ServerUtils.permMsg("sanctions.notify.unban", cc.create());

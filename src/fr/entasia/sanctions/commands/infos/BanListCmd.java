@@ -9,18 +9,18 @@ import net.md_5.bungee.api.plugin.Command;
 public class BanListCmd extends Command {
 
 	public BanListCmd() {
-		super("history");
+		super("banlist");
 	}
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(sender.hasPermission("sanctions.history")){
+		if(sender.hasPermission("sanctions.use.banlist")){
 			sender.sendMessage(ChatComponent.create(execBan(sender, args, false)));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 
 	public static String execBan(CommandSender sender, String[] args, boolean silent){
-		if(args.length==0)return "§cSyntaxe : /history <pseudo> [options]"; // TODO options à faire
+		if(args.length==0)return "§cSyntaxe : /banlist <pseudo> [options]"; // TODO options à faire
 		return "A faire...";
 	}
 
