@@ -1,6 +1,8 @@
 package fr.entasia.sanctions.listeners;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.TextUtils;
+import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.SanctionEntry;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -15,13 +17,13 @@ import java.util.Arrays;
 
 public class Base implements Listener {
 
-	public static ChatComponent genBanReason(SanctionEntry se){
+	public static ChatComponent genBanReason(SanctionEntry se, String exp){
 		return new ChatComponent(
 				"§c§m----§c  Tu es banni d'§bEnta§8sia§c ! (pas cool ca)  §c§m----",
 				" ",
 				"§cPar : §8"+se.by,
 				"§cLe : §8"+se.formatWhen(),
-				"§cExpiration dans : §8"+se.remaning(),
+				"§cExpiration dans : §8"+exp,
 				"§cBanni pour la raison : §8"+se.reason,
 				" ",
 				" ",
@@ -34,8 +36,18 @@ public class Base implements Listener {
 		byte[] ip = e.getConnection().getAddress().getAddress().getAddress();
 		for(SanctionEntry se : Utils.bans){
 			if(name.equals(se.on)|| Arrays.equals(ip, se.ip)){
+				ChatComponent cc;
+				if(se.time!=-1){
+					int rem = se.remaning();
+					if(rem>0) cc = genBanReason(se, TextUtils.secondsToTime(rem));
+					else{
+						se.SQLDelete();
+						Utils.bans.remove(se);
+						return;
+					}
+				}else cc = genBanReason(se, "Indéfini");
 				e.setCancelled(true);
-				e.setCancelReason(genBanReason(se).create());
+				e.setCancelReason(cc.create());
 				return;
 			}
 		}
@@ -43,11 +55,23 @@ public class Base implements Listener {
 
 	@EventHandler(priority = -120)
 	public void ban(ChatEvent e){
-		String name = ((ProxiedPlayer) e.getSender()).getName();
+		if(e.getMessage().startsWith("/"))return;
+		ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+		String name = p.getName();
 		for(SanctionEntry se : Utils.mutes) {
 			if (name.equals(se.on)){
+				if(se.time==-1)p.sendMessage(ChatComponent.create("§cTu es muté pour une durée indéfinie !"));
+				else{
+					int rem = se.remaning();
+					if(rem>0){
+						p.sendMessage(ChatComponent.create("§cTu es encore muté pour §8"+ TextUtils.secondsToTime(se.remaning())+"§c !"));
+					}else{
+						se.SQLDelete();
+						Utils.mutes.remove(se);
+						return;
+					}
+				}
 				e.setCancelled(true);
-				((ProxiedPlayer) e.getSender()).sendMessage(ChatComponent.create("§cTu es encore muté pour §8"+se.remaning()+"§c !"));
 				return;
 			}
 		}

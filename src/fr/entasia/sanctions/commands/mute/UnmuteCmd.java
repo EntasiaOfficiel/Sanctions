@@ -27,7 +27,7 @@ public class UnmuteCmd extends Command {
 				if(args[0].contains(".")){
 					try {
 						byte[] ip = InetAddress.getByName(args[0]).getAddress();
-						for(SanctionEntry l : Utils.bans){
+						for(SanctionEntry l : Utils.mutes){
 							if(Arrays.equals(ip, l.ip)){
 								se = l;
 								break;
@@ -40,14 +40,14 @@ public class UnmuteCmd extends Command {
 						sender.sendMessage(ChatComponent.create("§cL'adresse IP "+args[0]+" est invalide !"));
 					}
 				}else {
-					for (SanctionEntry l : Utils.bans) {
+					for (SanctionEntry l : Utils.mutes) {
 						if (args[0].equals(l.on)) {
 							se = l;
 							break;
 						}
 					}
 					if (se == null) {
-						sender.sendMessage(ChatComponent.create("§cCe pseudo n'est pas banni !"));
+						sender.sendMessage(ChatComponent.create("§cCe pseudo n'est pas muté !"));
 					}
 				}
 				if(se==null)return;
@@ -66,18 +66,14 @@ public class UnmuteCmd extends Command {
 				else reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
 				Utils.mutes.remove(se);
-				if(Main.sql.fastUpdate("DELETE FROM actuals WHERE `on`=?", se.on)==-1||
-						Main.sql.fastUpdate("UPDATE actuals SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
-								sender.getName(), new Date().getTime(), reason, se.id)==-1){
-					sender.sendMessage(ChatComponent.create("§cUne erreur SQL s'est produite !"));
-				}else {
+				se.SQLDelete();
+				Main.sql.fastUpdate("UPDATE history SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
+								sender.getName(), new Date().getTime(), reason, se.id);
+				ChatComponent cc = new ChatComponent("§c§lUnmute§c : §8"+sender.getName()+"§c à démuté §8"+se.on+"§c !"+Main.c);
+				cc.setHoverEvent(se.getHover());
+				ServerUtils.permMsg("sanctions.notify.unmute", cc.create());
 
-					ChatComponent cc = new ChatComponent("§c§lUnmute§c : §8"+sender.getName()+"§c à démuté §8"+se.on+"§c !"+Main.c);
-					cc.setHoverEvent(se.getHover());
-					ServerUtils.permMsg("sanctions.notify.unmute", cc.create());
-
-					sender.sendMessage(ChatComponent.create("§c" + se.on + " à été démuté avec succès !"));
-				}
+				sender.sendMessage(ChatComponent.create("§c" + se.on + " à été démuté avec succès !"));
 			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /unmute <player>"));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}

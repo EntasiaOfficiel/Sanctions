@@ -2,3 +2,4 @@ name: Sanctions
 main: fr.entasia.sanctions.Main
 author: iTrooz_
 version: '-1'
+depends: [Libraries]

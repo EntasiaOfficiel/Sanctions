@@ -80,7 +80,9 @@ public class Main extends Plugin {
 				se.time = rs.getInt("time");
 				se.reason = rs.getString("reason");
 
-				switch(rs.getByte("type")){
+				se.type = rs.getByte("type");
+
+				switch(se.type){
 					case 0:{
 						se.ip = InetAddress.getByName(rs.getString("address")).getAddress();
 						Utils.bans.add(se);

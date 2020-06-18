@@ -2,6 +2,7 @@ package fr.entasia.sanctions.commands.ban;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.ServerUtils;
+import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.listeners.Base;
@@ -68,7 +69,7 @@ public class BanCmd extends Command {
 
 				if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))se.time = -1;
 				else{
-					se.time = Utils.parseTime(args[1]);
+					se.time = TextUtils.timeToSeconds(args[1]);
 					if(se.time<=0)return "§cTemps "+args[1]+" invalide !";
 				}
 
@@ -79,16 +80,18 @@ public class BanCmd extends Command {
 				if(se.reason.equals(""))se.reason = "Aucune";
 				se.when = Calendar.getInstance();
 
+				se.type = 0;
+
 
 				se.id = Utils.requ(1,"INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
-						"(?, ?, ?, ?, ?, ?, ?)", se.on, se.by, 0, se.when.getTimeInMillis(), se.time, se.reason);
+						"(?, ?, ?, ?, ?, ?, ?)", se.on, se.by, se.type, se.when.getTimeInMillis(), se.time, se.reason);
 
 				Main.sql.fastUpdate("INSERT INTO actuals (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
-						"(?, ?, ?, ?, ?, ?, ?)", se.id, se.on, se.by, 0, se.when.getTimeInMillis(), se.time, se.reason);
+						"(?, ?, ?, ?, ?, ?, ?)", se.id, se.on, se.by, se.type, se.when.getTimeInMillis(), se.time, se.reason);
 
 				Utils.bans.add(se);
 				ProxiedPlayer p = Main.main.getProxy().getPlayer(rs.getString("name"));
-				if(p!=null)p.disconnect(Base.genBanReason(se).create());
+				if(p!=null)p.disconnect(Base.genBanReason(se, se.time == -1 ? "§8Indéfini" : TextUtils.secondsToTime(se.remaning())).create());
 
 				if(silent){
 					ChatComponent cc = new ChatComponent("§cSanction §ldiscrète§c : §8"+sender.getName()+"§c à banni §8"+se.on+"§c ! "+Main.c);

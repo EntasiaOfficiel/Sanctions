@@ -2,6 +2,7 @@ package fr.entasia.sanctions.commands.mute;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.ServerUtils;
+import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.listeners.Base;
@@ -59,7 +60,7 @@ public class MuteCmd extends Command {
 
 				if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))se.time = -1;
 				else{
-					se.time = Utils.parseTime(args[1]);
+					se.time = TextUtils.timeToSeconds(args[1]);
 					if(se.time<=0)return "§cTemps "+args[1]+" invalide !";
 				}
 
@@ -70,12 +71,14 @@ public class MuteCmd extends Command {
 				if(se.reason.equals(""))se.reason = "Aucune";
 				se.when = Calendar.getInstance();
 
+				se.type = 1;
+
 
 				se.id = Utils.requ(1,"INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
-						"(?, ?, ?, ?, ?, ?, ?)", se.on, se.by, 1, se.when.getTimeInMillis(), se.time, se.reason);
+						"(?, ?, ?, ?, ?, ?, ?)", se.on, se.by, se.type, se.when.getTimeInMillis(), se.time, se.reason);
 
 				Main.sql.fastUpdate("INSERT INTO actuals (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
-						"(?, ?, ?, ?, ?, ?, ?)", se.id, se.on, se.by, 1, se.when.getTimeInMillis(), se.time, se.reason);
+						"(?, ?, ?, ?, ?, ?, ?)", se.id, se.on, se.by, se.type, se.when.getTimeInMillis(), se.time, se.reason);
 
 				Utils.mutes.add(se);
 
@@ -84,7 +87,7 @@ public class MuteCmd extends Command {
 					cc.setHoverEvent(se.getHover());
 					ServerUtils.permMsg("sanctions.notify.ban", cc.create());
 				}else{
-					ChatComponent cc = new ChatComponent("§cSanction : §8"+sender.getName()+"§c à banni §8"+se.on+"§c ! "+Main.c);
+					ChatComponent cc = new ChatComponent("§cSanction : §8"+sender.getName()+"§c à muté §8"+se.on+"§c ! "+Main.c);
 					cc.setHoverEvent(se.getHover());
 					Main.main.getProxy().broadcast(cc.create());
 				}
@@ -101,6 +104,6 @@ public class MuteCmd extends Command {
 		}
 	}
 
-		public static UserManager manager = Main.lpAPI.getUserManager();
+	public static UserManager manager = Main.lpAPI.getUserManager();
 
 }

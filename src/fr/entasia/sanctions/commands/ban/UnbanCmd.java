@@ -66,18 +66,14 @@ public class UnbanCmd extends Command {
 				else reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
 				Utils.bans.remove(se);
-				if(Main.sql.fastUpdate("DELETE FROM actuals WHERE `on`=?", se.on)==-1||
-						Main.sql.fastUpdate("UPDATE history SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
-								sender.getName(), new Date().getTime(), reason, se.id)==-1){
-					sender.sendMessage(ChatComponent.create("§cUne erreur SQL s'est produite !"));
-				}else {
+				se.SQLDelete();
+				Main.sql.fastUpdate("UPDATE history SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
+						sender.getName(), new Date().getTime(), reason, se.id);
+				ChatComponent cc = new ChatComponent("§c§lUnban§c : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c !"+Main.c);
+				cc.setHoverEvent(se.getHover());
+				ServerUtils.permMsg("sanctions.notify.unban", cc.create());
 
-					ChatComponent cc = new ChatComponent("§c§lUnban§c : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c !"+Main.c);
-					cc.setHoverEvent(se.getHover());
-					ServerUtils.permMsg("sanctions.notify.unban", cc.create());
-
-					sender.sendMessage(ChatComponent.create("§c" + se.on + " à été débanni avec succès !"));
-				}
+				sender.sendMessage(ChatComponent.create("§c" + se.on + " à été débanni avec succès !"));
 			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /unban <player>"));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}

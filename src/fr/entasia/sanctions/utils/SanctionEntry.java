@@ -2,6 +2,7 @@ package fr.entasia.sanctions.utils;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.TextUtils;
+import fr.entasia.sanctions.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.HoverEvent;
 
@@ -14,6 +15,8 @@ public class SanctionEntry {
 
 	public String on;
 	public String by;
+
+	public byte type;
 
 	public Calendar when;
 	public int time;
@@ -44,8 +47,13 @@ public class SanctionEntry {
 		else return b;
 	}
 
-	public String remaning(){
-		if(time==-1)return "Indéfini";
-		else return TextUtils.secondsToTime((int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000));
+	public int remaning(){
+		return (int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000);
 	}
+
+	public void SQLDelete(){
+		int a = Main.sql.fastUpdate("DELETE FROM actuals WHERE `on`=? and type=?", on, type);
+		System.out.println(a);
+	}
+
 }
