@@ -41,7 +41,7 @@ public class CheckCmd extends Command {
 						sender.sendMessage(ChatComponent.create("§cAdresse IP invalide !"));
 					}
 				}else{
-					sender.sendMessage(ChatComponent.create("§cSanctions actuelles du pseudo "+args[0]+" :"));
+					sender.sendMessage(ChatComponent.create("§cSanctions actuelles du joueur "+args[0]+" :"));
 					for(SanctionEntry se : Utils.bans) {
 						if(args[0].equals(se.on)){
 							nop = false;

@@ -47,7 +47,7 @@ public class UnbanCmd extends Command {
 						}
 					}
 					if (se == null) {
-						sender.sendMessage(ChatComponent.create("§cCe pseudo n'est pas banni !"));
+						sender.sendMessage(ChatComponent.create("§cCe joueur n'est pas banni !"));
 					}
 				}
 				if(se==null)return;
@@ -69,7 +69,7 @@ public class UnbanCmd extends Command {
 				Main.sql.fastUpdate("UPDATE history SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
 						sender.getName(), new Date().getTime(), reason, se.id);
 				Utils.bans.remove(se);
-				ChatComponent cc = new ChatComponent("§c§lUnban§c : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c !"+Main.c);
+				ChatComponent cc = new ChatComponent("§cSanction : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c !"+Main.c);
 				cc.setHoverEvent(se.getHover());
 				ServerUtils.permMsg("sanctions.notify.unban", cc.create());
 

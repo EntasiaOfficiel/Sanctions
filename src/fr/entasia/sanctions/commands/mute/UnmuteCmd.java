@@ -47,7 +47,7 @@ public class UnmuteCmd extends Command {
 						}
 					}
 					if (se == null) {
-						sender.sendMessage(ChatComponent.create("§cCe pseudo n'est pas muté !"));
+						sender.sendMessage(ChatComponent.create("§cCe joueur n'est pas muté !"));
 					}
 				}
 				if(se==null)return;

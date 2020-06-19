@@ -88,16 +88,19 @@ public class Base implements Listener {
 
 	@EventHandler
 	public void onTabComplete(TabCompleteEvent e) {
-		String[] a = e.getCursor().split(" ");
-		if(a[0].length()>1&&isTabCmd(a[0].substring(1).toLowerCase())){
-			if(a.length>1){
-				a[1] = a[1].toLowerCase();
-				for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
-					if(p.getDisplayName().toLowerCase().startsWith(a[1]))e.getSuggestions().add(p.getDisplayName());
-				}
-			}else{
-				for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
-					e.getSuggestions().add(p.getDisplayName());
+		String[] args = e.getCursor().split(" ");
+		if(args[0].length()<=1)return;
+		if(isTabCmd(args[0].substring(1).toLowerCase())){
+			if(((ProxiedPlayer)e.getSender()).hasPermission("sanctions.use."+args[0])){
+				if(args.length>1){
+					args[1] = args[1].toLowerCase();
+					for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
+						if(p.getDisplayName().toLowerCase().startsWith(args[1]))e.getSuggestions().add(p.getDisplayName());
+					}
+				}else{
+					for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
+						e.getSuggestions().add(p.getDisplayName());
+					}
 				}
 			}
 		}
