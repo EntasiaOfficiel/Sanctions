@@ -3,7 +3,8 @@ package fr.entasia.sanctions.commands.infos;
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
-import fr.entasia.sanctions.utils.SanctionEntry;
+import fr.entasia.sanctions.utils.BanEntry;
+import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -27,7 +28,7 @@ public class CheckCmd extends Command {
 					try{
 						byte[] ip = InetAddress.getByName(args[0]).getAddress();
 						sender.sendMessage(ChatComponent.create("§cSanctions actuelles de l'IP "+args[0]+" :"));
-						for(SanctionEntry se : Utils.bans) {
+						for(BanEntry se : Utils.bans) {
 							if(Arrays.equals(se.ip, ip)) {
 								nop = false;
 								comp.append("§cOui "+Main.c);
@@ -42,7 +43,7 @@ public class CheckCmd extends Command {
 					}
 				}else{
 					sender.sendMessage(ChatComponent.create("§cSanctions actuelles du joueur "+args[0]+" :"));
-					for(SanctionEntry se : Utils.bans) {
+					for(MuteEntry se : Utils.bans) {
 						if(args[0].equals(se.on)){
 							nop = false;
 							comp.append("§cOui "+Main.c);
@@ -55,7 +56,7 @@ public class CheckCmd extends Command {
 
 					comp = new ChatComponent("§4- §cMuté : ");
 					nop = true;
-					for(SanctionEntry se : Utils.mutes) {
+					for(MuteEntry se : Utils.mutes) {
 						if(args[0].equals(se.on)) {
 							nop = false;
 							comp.append("§cOui "+Main.c);

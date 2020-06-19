@@ -1,8 +1,7 @@
 package fr.entasia.sanctions;
 
-import fr.entasia.apis.ChatComponent;
-import fr.entasia.sanctions.utils.SanctionEntry;
-import net.md_5.bungee.api.CommandSender;
+import fr.entasia.sanctions.utils.BanEntry;
+import fr.entasia.sanctions.utils.MuteEntry;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,8 +9,8 @@ import java.util.ArrayList;
 
 public class Utils {
 
-	public static ArrayList<SanctionEntry> bans = new ArrayList<>();
-	public static ArrayList<SanctionEntry> mutes = new ArrayList<>();
+	public static ArrayList<BanEntry> bans = new ArrayList<>();
+	public static ArrayList<MuteEntry> mutes = new ArrayList<>();
 
 	private static int genID(){
 		return Main.random.nextInt(0x7FFFFF);

@@ -5,8 +5,7 @@ import fr.entasia.apis.ServerUtils;
 import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
-import fr.entasia.sanctions.listeners.Base;
-import fr.entasia.sanctions.utils.SanctionEntry;
+import fr.entasia.sanctions.utils.MuteEntry;
 import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
@@ -14,12 +13,9 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.net.InetAddress;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.UUID;
 
 public class MuteCmd extends Command {
 
@@ -51,8 +47,8 @@ public class MuteCmd extends Command {
 			if (target == null) return "§cCe joueur n'est pas connecté ou n'existe pas !";
 
 			try{
-				SanctionEntry se = null;
-				for(SanctionEntry lse : Utils.bans){
+				MuteEntry se = null;
+				for(MuteEntry lse : Utils.bans){
 					if(lse.on.equals(args[0])){
 						se = lse;
 						break;
@@ -67,7 +63,7 @@ public class MuteCmd extends Command {
 						return "§cTu ne peut pas muter ce joueur !";
 					}
 
-					se = new SanctionEntry();
+					se = new MuteEntry();
 
 					if (args[1].equalsIgnoreCase("def") || args[1].equalsIgnoreCase("inf")) se.time = -1;
 					else {

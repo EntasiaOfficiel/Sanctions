@@ -6,7 +6,8 @@ import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.listeners.Base;
-import fr.entasia.sanctions.utils.SanctionEntry;
+import fr.entasia.sanctions.utils.BanEntry;
+import fr.entasia.sanctions.utils.MuteEntry;
 import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
@@ -46,8 +47,8 @@ public class BanCmd extends Command {
 			return "§cSyntaxe : /"+cmd+" <pseudo> <temps/def> [raison]";
 		}else{
 			try{
-				SanctionEntry se = null;
-				for(SanctionEntry lse : Utils.bans){
+				BanEntry se = null;
+				for(BanEntry lse : Utils.bans){
 					if(lse.on.equals(args[0])){
 						se = lse;
 						break;
@@ -67,13 +68,12 @@ public class BanCmd extends Command {
 							}
 							if (u == null) return "§cImpossible de charger les données de cet utilisateur !";
 						}
-						if(u.hasPermission(banExcept).asBoolean()&&!sender.hasPermission("restricted.sancmaster"
-						)){
+						if(u.hasPermission(banExcept).asBoolean()&&!sender.hasPermission("restricted.sancmaster")){
 							return "§cTu ne peut pas bannir ce joueur !";
 						}
 					}
 
-					se = new SanctionEntry();
+					se = new BanEntry();
 
 					if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))se.time = -1;
 					else{

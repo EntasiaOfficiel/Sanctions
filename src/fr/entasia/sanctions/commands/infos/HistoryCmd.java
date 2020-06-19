@@ -1,11 +1,9 @@
 package fr.entasia.sanctions.commands.infos;
 
-import com.mysql.jdbc.ResultSetImpl;
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
-import fr.entasia.sanctions.utils.SanctionEntry;
-import me.lucko.luckperms.api.manager.UserManager;
+import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.plugin.Command;
@@ -31,11 +29,11 @@ public class HistoryCmd extends Command {
 					if (rs.next()) {
 						ChatComponent cc;
 						ChatComponent h;
-						SanctionEntry se;
+						MuteEntry se;
 						String a;
 						sender.sendMessage(ChatComponent.create("§cSanctions de §8" + args[0] + "§c :"));
 						do {
-							se = new SanctionEntry(); // pas une vraie sanction, juste utilisée comme structure
+							se = new MuteEntry(); // pas une vraie sanction, juste utilisée comme structure
 							se.id = rs.getInt("id");
 							se.on = rs.getString("on");
 							se.by = rs.getString("by");

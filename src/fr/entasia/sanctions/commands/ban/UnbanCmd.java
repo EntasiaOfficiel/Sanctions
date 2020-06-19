@@ -4,7 +4,8 @@ import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.ServerUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
-import fr.entasia.sanctions.utils.SanctionEntry;
+import fr.entasia.sanctions.utils.BanEntry;
+import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -23,34 +24,17 @@ public class UnbanCmd extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		if(sender.hasPermission("sanctions.use.unban")){
 			if(args.length>0){
-				SanctionEntry se = null;
-				if(args[0].contains(".")){
-					try {
-						byte[] ip = InetAddress.getByName(args[0]).getAddress();
-						for(SanctionEntry l : Utils.bans){
-							if(Arrays.equals(ip, l.ip)){
-								se = l;
-								break;
-							}
-						}
-						if(se==null){
-							sender.sendMessage(ChatComponent.create("§cCette adresse IP n'est pas bannie !"));
-						}
-					} catch (UnknownHostException e) {
-						sender.sendMessage(ChatComponent.create("§cL'adresse IP "+args[0]+" est invalide !"));
-					}
-				}else {
-					for (SanctionEntry l : Utils.bans) {
+				BanEntry se = null;
+				for (BanEntry l : Utils.bans) {
 						if (args[0].equals(l.on)) {
 							se = l;
 							break;
 						}
 					}
-					if (se == null) {
-						sender.sendMessage(ChatComponent.create("§cCe joueur n'est pas banni !"));
-					}
+				if (se == null) {
+					sender.sendMessage(ChatComponent.create("§cCe joueur n'est pas banni !"));
+					return;
 				}
-				if(se==null)return;
 
 				if (!se.by.equals(sender.getName())){
 					if (sender.hasPermission("sanctions.override.ban")) {

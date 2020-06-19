@@ -9,7 +9,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SanctionEntry {
+public class MuteEntry {
 
 	public int id;
 
@@ -22,8 +22,6 @@ public class SanctionEntry {
 	public int time;
 
 	public String reason;
-
-	public byte[] ip; // juste pour le ban
 
 
 	public HoverEvent getHover(){
