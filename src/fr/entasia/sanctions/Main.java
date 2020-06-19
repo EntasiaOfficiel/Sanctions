@@ -4,7 +4,6 @@ import fr.entasia.apis.sql.SQLConnection;
 import fr.entasia.sanctions.commands.infos.BanListCmd;
 import fr.entasia.sanctions.commands.infos.CheckCmd;
 import fr.entasia.sanctions.commands.infos.HistoryCmd;
-import fr.entasia.sanctions.commands.StopCmd;
 import fr.entasia.sanctions.commands.ban.BanCmd;
 import fr.entasia.sanctions.commands.ban.SilentBanCmd;
 import fr.entasia.sanctions.commands.ban.UnbanCmd;
@@ -48,12 +47,11 @@ public class Main extends Plugin {
 		try{
 			getLogger().info("Activation du plugin..");
 			main = this;
-			sql = new SQLConnection("root", "sanctions"); // sanctions
+			sql = new SQLConnection("sanctions", "sanctions"); // sanctions
 			lpAPI = LuckPerms.getApi();
 
 			getProxy().getPluginManager().registerListener(this, new Base());
 
-			getProxy().getPluginManager().registerCommand(this, new StopCmd());
 
 			getProxy().getPluginManager().registerCommand(this, new CheckCmd());
 			getProxy().getPluginManager().registerCommand(this, new BanListCmd());
