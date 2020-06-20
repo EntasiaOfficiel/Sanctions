@@ -23,6 +23,9 @@ public class MuteEntry {
 
 	public String reason;
 
+	public boolean isValid(){
+		return time==-1||remaning()>0;
+	}
 
 	public HoverEvent getHover(){
 		return new HoverEvent(HoverEvent.Action.SHOW_TEXT, getInfos().create());

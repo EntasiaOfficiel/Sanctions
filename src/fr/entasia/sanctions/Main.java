@@ -1,7 +1,7 @@
 package fr.entasia.sanctions;
 
 import fr.entasia.apis.sql.SQLConnection;
-import fr.entasia.sanctions.commands.infos.BanListCmd;
+import fr.entasia.sanctions.commands.infos.MuteListCmd;
 import fr.entasia.sanctions.commands.infos.CheckCmd;
 import fr.entasia.sanctions.commands.infos.HistoryCmd;
 import fr.entasia.sanctions.commands.ban.BanCmd;
@@ -55,7 +55,7 @@ public class Main extends Plugin {
 
 
 			getProxy().getPluginManager().registerCommand(this, new CheckCmd());
-			getProxy().getPluginManager().registerCommand(this, new BanListCmd());
+			getProxy().getPluginManager().registerCommand(this, new MuteListCmd());
 			getProxy().getPluginManager().registerCommand(this, new HistoryCmd());
 
 			getProxy().getPluginManager().registerCommand(this, new BanCmd());
@@ -69,14 +69,17 @@ public class Main extends Plugin {
 			getProxy().getPluginManager().registerCommand(this, new KickCmd());
 
 			cmdcompletes.add("check");
-			cmdcompletes.add("banlist");
+			cmdcompletes.add("mutelist");
 			cmdcompletes.add("history");
+
 			cmdcompletes.add("ban");
 			cmdcompletes.add("silentban");
 			cmdcompletes.add("unban");
+
 			cmdcompletes.add("mute");
 			cmdcompletes.add("silentmute");
 			cmdcompletes.add("unmute");
+
 			cmdcompletes.add("kick");
 
 			ResultSet rs = sql.fastSelectUnsafe(
@@ -106,7 +109,6 @@ public class Main extends Plugin {
 						continue;
 					}
 				}
-				se = new MuteEntry();
 				se.id = rs.getInt("id");
 				se.on = rs.getString("on");
 				se.by = rs.getString("by");

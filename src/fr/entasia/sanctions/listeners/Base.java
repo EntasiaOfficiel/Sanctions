@@ -17,19 +17,6 @@ import java.util.Arrays;
 
 public class Base implements Listener {
 
-	public static ChatComponent genBanReason(MuteEntry se, String exp){
-		return new ChatComponent(
-				"§c§m----§c  Tu es banni d'§bEnta§8sia§c ! (pas cool ca)  §c§m----",
-				" ",
-				"§cPar : §8"+se.by,
-				"§cLe : §8"+se.formatWhen(),
-				"§cExpiration dans : §8"+exp,
-				"§cBanni pour la raison : §8"+se.reason,
-				" ",
-				" ",
-				"§cUne réclamation à faire ? Contacte nous sur notre Discord :§6 https://discord.gg/fp9PFP9 §c|§6 https://entasia.fr/discord");
-	}
-
 	@EventHandler(priority = -120)
 	public void ban(PreLoginEvent e){
 		String name = e.getConnection().getName();
@@ -37,24 +24,21 @@ public class Base implements Listener {
 		for(BanEntry se : Utils.bans){
 			if(name.equals(se.on)|| Arrays.equals(ip, se.ip)){
 				ChatComponent cc;
-				if(se.time!=-1){
-					int rem = se.remaning();
-					if(rem>0) cc = genBanReason(se, TextUtils.secondsToTime(rem));
-					else{
-						se.SQLDelete();
-						Utils.bans.remove(se);
-						return;
-					}
-				}else cc = genBanReason(se, "Indéfini");
-				e.setCancelled(true);
-				e.setCancelReason(cc.create());
+				if(se.isValid()) {
+					cc = se.genBanReason();
+					e.setCancelled(true);
+					e.setCancelReason(cc.create());
+				}else {
+					se.SQLDelete();
+					Utils.bans.remove(se);
+				}
 				return;
 			}
 		}
 	}
 
 	@EventHandler(priority = -120)
-	public void ban(ChatEvent e){
+	public void mute(ChatEvent e){
 		if(e.getMessage().startsWith("/"))return;
 		ProxiedPlayer p = (ProxiedPlayer)e.getSender();
 		String name = p.getName();

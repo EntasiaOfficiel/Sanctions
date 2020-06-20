@@ -22,8 +22,6 @@ public class SanctionsAPI {
 		return null;
 	}
 
-
-
 	public static MuteEntry getMuteEntry(String name){
 		for(MuteEntry se : Utils.mutes){
 			if(se.on.equals(name))return se;

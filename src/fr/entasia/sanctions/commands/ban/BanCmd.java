@@ -99,7 +99,7 @@ public class BanCmd extends Command {
 
 					Utils.bans.add(se);
 					ProxiedPlayer p = Main.main.getProxy().getPlayer(rs.getString("name"));
-					if(p!=null)p.disconnect(Base.genBanReason(se, se.time == -1 ? "§8Indéfini" : TextUtils.secondsToTime(se.remaning())).create());
+					if(p!=null)p.disconnect(se.genBanReason().create());
 
 					if(silent){
 						ChatComponent cc = new ChatComponent("§cSanction §ldiscrète§c : §8"+sender.getName()+"§c à banni §8"+se.on+"§c ! "+Main.c);
