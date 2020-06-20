@@ -1,7 +1,6 @@
 package fr.entasia.sanctions.commands.mute;
 
 import fr.entasia.apis.ChatComponent;
-import fr.entasia.sanctions.commands.mute.MuteCmd;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 

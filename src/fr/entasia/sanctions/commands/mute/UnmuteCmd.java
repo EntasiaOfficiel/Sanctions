@@ -6,11 +6,11 @@ import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 public class UnmuteCmd extends Command {
@@ -54,8 +54,12 @@ public class UnmuteCmd extends Command {
 				Main.sql.fastUpdate("UPDATE history SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
 								sender.getName(), new Date().getTime(), reason, se.id);
 				ChatComponent cc = new ChatComponent("§c§lUnmute§c : §8"+sender.getName()+"§c à démuté §8"+se.on+"§c !"+Main.c);
-				cc.setHoverEvent(se.getHover());
+				cc.setHoverEvent(se.getHover(sender.getName(), Calendar.getInstance(), reason));
 				ServerUtils.permMsg("sanctions.notify.unmute", cc.create());
+
+				if(Main.botHook){
+					Utils.sendNoSancEmbed(se, sender.getName(), reason);
+				}
 
 				sender.sendMessage(ChatComponent.create("§c" + se.on + " à été démuté avec succès !"));
 			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /unmute <player>"));

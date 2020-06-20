@@ -10,5 +10,7 @@
     <orderEntry type="library" name="WaterFall" level="project" />
     <orderEntry type="library" name="Libraries" level="project" />
     <orderEntry type="library" name="LuckPerms-Bungee" level="project" />
+    <orderEntry type="library" name="JDA" level="project" />
+    <orderEntry type="library" name="CoreBungee" level="project" />
   </component>
 </module>

@@ -43,6 +43,8 @@ public class Main extends Plugin {
 
 	public static final ArrayList<String> cmdcompletes = new ArrayList<>();
 
+	public static boolean botHook;
+
 	@Override
 	public void onEnable(){
 		try{
@@ -50,6 +52,8 @@ public class Main extends Plugin {
 			main = this;
 			sql = new SQLConnection("sanctions", "sanctions"); // sanctions
 			lpAPI = LuckPerms.getApi();
+
+			botHook = getProxy().getPluginManager().getPlugin("CoreBungee")!=null;
 
 			getProxy().getPluginManager().registerListener(this, new Base());
 

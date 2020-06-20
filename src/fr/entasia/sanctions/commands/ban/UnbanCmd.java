@@ -12,6 +12,7 @@ import net.md_5.bungee.api.plugin.Command;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 public class UnbanCmd extends Command {
@@ -54,8 +55,10 @@ public class UnbanCmd extends Command {
 						sender.getName(), new Date().getTime(), reason, se.id);
 				Utils.bans.remove(se);
 				ChatComponent cc = new ChatComponent("§cSanction : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c !"+Main.c);
-				cc.setHoverEvent(se.getHover());
+				cc.setHoverEvent(se.getHover(sender.getName(), Calendar.getInstance(), reason));
 				ServerUtils.permMsg("sanctions.notify.unban", cc.create());
+
+				Utils.sendNoSancEmbed(se, sender.getName(), reason);
 
 				sender.sendMessage(ChatComponent.create("§c" + se.on + " à été débanni avec succès !"));
 			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /unban <player>"));

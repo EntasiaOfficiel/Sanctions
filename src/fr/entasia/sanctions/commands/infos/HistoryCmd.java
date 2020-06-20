@@ -27,8 +27,9 @@ public class HistoryCmd extends Command {
 
 					ResultSet rs = Main.sql.fastSelectUnsafe("SELECT * FROM history WHERE `on`=? ORDER BY `when` ASC", args[0]);
 					if (rs.next()) {
+						Calendar c;
 						ChatComponent cc;
-						ChatComponent h;
+						HoverEvent hover;
 						MuteEntry se;
 						String a;
 						sender.sendMessage(ChatComponent.create("§cSanctions de §8" + args[0] + "§c :"));
@@ -43,18 +44,16 @@ public class HistoryCmd extends Command {
 							se.reason = rs.getString("reason");
 
 							cc = new ChatComponent("§c" + TextUtils.formatCalendar(se.when) + " §8" + (rs.getByte("type") == 0 ? "Ban" : "Mute")+" §c"+Main.c);
-							h = se.getInfos();
 							a = rs.getString("unban_by");
-							if (a != null) {
-								h.append("\n§cDébanni par : §8" + a);
-								se.when.setTimeInMillis(rs.getLong("unban_when"));
-								h.append("\n§cDébanni le : §8" + TextUtils.formatCalendar(se.when));
-								a = rs.getString("unban_reason");
-								h.append("\n§cDébanni pour raison : §8" + (a == null ? "§cIndéfinie" : a));
+							if(a==null)hover = se.getHover();
+							else{
+								c = Calendar.getInstance();
+								c.setTimeInMillis(rs.getLong("unban_when"));
+								hover = se.getHover(a, c, rs.getString("unban_reason"));
 							}
 
 							se.type = rs.getByte("type");
-							cc.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, h.create()));
+							cc.setHoverEvent(hover);
 
 							sender.sendMessage(cc.create());
 

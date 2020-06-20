@@ -3,6 +3,7 @@ package fr.entasia.sanctions.utils;
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.md_5.bungee.api.chat.HoverEvent;
 
 import java.util.Calendar;
@@ -29,5 +30,4 @@ public class BanEntry extends MuteEntry {
 				" ",
 				"§cUne réclamation à faire ? Contacte nous sur notre Discord :§6 https://discord.gg/fp9PFP9 §c|§6 https://entasia.fr/discord");
 	}
-
 }
