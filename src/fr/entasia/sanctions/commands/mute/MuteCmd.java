@@ -116,9 +116,7 @@ public class MuteCmd extends Command {
 		);
 		target.sendMessage(msg.create());
 
-		if(Main.botHook){
-			Utils.sendSancEmbed(se, false);
-		}
+		Utils.sendSancEmbed(se);
 
 		return "§c" + se.on + " à été muté avec succès !";
 	}
@@ -134,22 +132,29 @@ public class MuteCmd extends Command {
 				}
 			}
 
+			int newTime;
+			String newReason = null;
 
-			if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))se.time = -1;
+			if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))newTime = -1;
 			else {
-				se.time = TextUtils.timeToSeconds(args[1]);
-				if (se.time <= 0) return "§cTemps " + args[1] + " invalide !";
+				newTime = TextUtils.timeToSeconds(args[1]);
+				if (newTime <= 0) return "§cTemps " + args[1] + " invalide !";
 			}
 
 			ChatComponent msg = new ChatComponent(
 					"§cTon mute à été modifié :",
 					"§cNouveau temps : §8"+TextUtils.secondsToTime(se.time));
 
-			String reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-			if(!reason.equals("")){
-				se.reason = reason;
-				msg.append("\n§cNouvelle raison : §8"+reason);
+			newReason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+			if(newReason.equals("")){
+				newReason = "Aucune";
+				Utils.sendModifSancEmbed(se, sender.getName(), newTime, newReason);
+			}else{
+				Utils.sendModifSancEmbed(se, sender.getName(), newTime, newReason);
+				msg.append("\n§cNouvelle raison : §8"+newReason);
+				se.reason = newReason;
 			}
+			se.time = newTime;
 
 			Main.sql.fastUpdate("UPDATE actuals SET time=?, reason=? WHERE id=?", se.time, se.reason, se.id);
 			Main.sql.fastUpdate("UPDATE history SET time=?, reason=? WHERE id=?", se.time, se.reason, se.id);
@@ -167,9 +172,6 @@ public class MuteCmd extends Command {
 			}
 			target.sendMessage(msg.create());
 
-			if(Main.botHook){
-				Utils.sendModifSancEmbed(se, sender.getName());
-			}
 
 			return "§cTu as bien modifié la sanction de §8"+se.on+"§c !";
 		}

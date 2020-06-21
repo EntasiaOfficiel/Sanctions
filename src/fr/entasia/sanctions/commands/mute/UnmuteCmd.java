@@ -6,7 +6,6 @@ import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Arrays;
@@ -57,9 +56,7 @@ public class UnmuteCmd extends Command {
 				cc.setHoverEvent(se.getHover(sender.getName(), Calendar.getInstance(), reason));
 				ServerUtils.permMsg("sanctions.notify.unmute", cc.create());
 
-				if(Main.botHook){
-					Utils.sendNoSancEmbed(se, sender.getName(), reason);
-				}
+				Utils.sendNoSancEmbed(se, sender.getName(), reason);
 
 				sender.sendMessage(ChatComponent.create("§c" + se.on + " à été démuté avec succès !"));
 			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : /unmute <player>"));

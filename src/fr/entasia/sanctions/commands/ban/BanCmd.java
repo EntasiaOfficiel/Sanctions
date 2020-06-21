@@ -5,9 +5,7 @@ import fr.entasia.apis.ServerUtils;
 import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
-import fr.entasia.sanctions.listeners.Base;
 import fr.entasia.sanctions.utils.BanEntry;
-import fr.entasia.sanctions.utils.MuteEntry;
 import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
@@ -125,9 +123,7 @@ public class BanCmd extends Command {
 			Main.main.getProxy().broadcast(cc.create());
 		}
 
-		if(Main.botHook){
-			Utils.sendSancEmbed(se, false);
-		}
+		Utils.sendSancEmbed(se);
 
 		return "§c" + se.on + " à été banni avec succès !";
 	}
@@ -144,14 +140,25 @@ public class BanCmd extends Command {
 			}
 		}
 
-		if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))se.time = -1;
+		int newTime;
+		String newReason=null;
+		if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))newTime = -1;
 		else {
-			se.time = TextUtils.timeToSeconds(args[1]);
-			if (se.time <= 0) return "§cTemps " + args[1] + " invalide !";
+			newTime = TextUtils.timeToSeconds(args[1]);
+			if (newTime <= 0) return "§cTemps " + args[1] + " invalide !";
 		}
 
-		String reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-		if(!reason.equals(""))se.reason = reason;
+		newReason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+		if(newReason.equals("")){
+			newReason = "Aucune";
+			Utils.sendModifSancEmbed(se, sender.getName(), newTime, newReason);
+		}else{
+			Utils.sendModifSancEmbed(se, sender.getName(), newTime, newReason);
+			se.reason = newReason;
+		}
+		se.time = newTime;
+
+
 
 		Main.sql.fastUpdate("UPDATE actuals SET time=?, reason=? WHERE id=?", se.time, se.reason, se.id);
 		Main.sql.fastUpdate("UPDATE history SET time=?, reason=? WHERE id=?", se.time, se.reason, se.id);
@@ -168,9 +175,7 @@ public class BanCmd extends Command {
 			Main.main.getProxy().broadcast(cc.create());
 		}
 
-		if(Main.botHook){
-			Utils.sendModifSancEmbed(se, sender.getName());
-		}
+
 
 		return "§cTu as bien modifié la sanction de §8"+se.on+"§c !";
 	}

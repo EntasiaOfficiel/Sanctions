@@ -1,9 +1,7 @@
 package fr.entasia.sanctions.utils;
 
 import fr.entasia.sanctions.Utils;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.net.InetAddress;
 import java.util.Arrays;
 
 public class SanctionsAPI {

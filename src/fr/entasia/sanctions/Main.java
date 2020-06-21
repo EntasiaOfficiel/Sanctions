@@ -1,12 +1,12 @@
 package fr.entasia.sanctions;
 
 import fr.entasia.apis.sql.SQLConnection;
-import fr.entasia.sanctions.commands.infos.MuteListCmd;
-import fr.entasia.sanctions.commands.infos.CheckCmd;
-import fr.entasia.sanctions.commands.infos.HistoryCmd;
 import fr.entasia.sanctions.commands.ban.BanCmd;
 import fr.entasia.sanctions.commands.ban.SilentBanCmd;
 import fr.entasia.sanctions.commands.ban.UnbanCmd;
+import fr.entasia.sanctions.commands.infos.CheckCmd;
+import fr.entasia.sanctions.commands.infos.HistoryCmd;
+import fr.entasia.sanctions.commands.infos.MuteListCmd;
 import fr.entasia.sanctions.commands.mute.MuteCmd;
 import fr.entasia.sanctions.commands.mute.SilentMuteCmd;
 import fr.entasia.sanctions.commands.mute.UnmuteCmd;
@@ -43,8 +43,6 @@ public class Main extends Plugin {
 
 	public static final ArrayList<String> cmdcompletes = new ArrayList<>();
 
-	public static boolean botHook;
-
 	@Override
 	public void onEnable(){
 		try{
@@ -52,8 +50,6 @@ public class Main extends Plugin {
 			main = this;
 			sql = new SQLConnection("sanctions", "sanctions"); // sanctions
 			lpAPI = LuckPerms.getApi();
-
-			botHook = getProxy().getPluginManager().getPlugin("CoreBungee")!=null;
 
 			getProxy().getPluginManager().registerListener(this, new Base());
 

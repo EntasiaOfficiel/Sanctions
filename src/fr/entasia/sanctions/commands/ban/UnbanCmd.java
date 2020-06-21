@@ -5,12 +5,9 @@ import fr.entasia.apis.ServerUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.BanEntry;
-import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;

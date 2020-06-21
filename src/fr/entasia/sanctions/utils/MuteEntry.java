@@ -1,12 +1,8 @@
 package fr.entasia.sanctions.utils;
 
-import com.sun.istack.internal.NotNull;
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.HoverEvent;
 
 import java.util.Calendar;

@@ -6,7 +6,6 @@ import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 public class MuteListCmd extends Command {

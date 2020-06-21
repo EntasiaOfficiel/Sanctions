@@ -1,22 +1,13 @@
 package fr.entasia.sanctions;
 
-import fr.entasia.apis.TextUtils;
-import fr.entasia.corebungee.jda.JDABot;
+import fr.entasia.apis.socket.SocketClient;
 import fr.entasia.sanctions.utils.BanEntry;
 import fr.entasia.sanctions.utils.MuteEntry;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalAdjuster;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Base64;
 
 public class Utils {
 
@@ -47,8 +38,26 @@ public class Utils {
 		}
 	}
 
+	private static String b64(String a){
+		return Base64.getEncoder().encodeToString(a.getBytes());
+	}
 
-	public static void sendSancEmbed(MuteEntry se, boolean kick){
+
+	public static void sendSancEmbed(MuteEntry se){
+		SocketClient.sendData("EBH sanc 0 "+se.type+" "+se.on+" "+se.by+" "+se.when.getTimeInMillis()+" "+se.time+" "+b64(se.reason));
+	}
+
+	public static void sendNoSancEmbed(MuteEntry se, String unban_by, String unban_reason){
+		SocketClient.sendData("EBH sanc 1 "+se.type+" "+se.on+" "+se.by+" "+se.when.getTimeInMillis()+" "+se.time+" "+b64(se.reason)+" "+unban_by+" "+b64(unban_reason));
+	}
+
+	public static void sendModifSancEmbed(MuteEntry se, String modifier, int newTime, String newReason){
+		SocketClient.sendData("EBH sanc 2 "+se.type+" "+se.on+" "+se.by+" "+se.when.getTimeInMillis()+" "+se.time+" "+b64(se.reason)+" "+modifier+" "+newTime+" "+newReason);
+	}
+
+
+	/*
+	SocketClient.sendData("EBH sanc 0 "+);
 		EmbedBuilder embed = new EmbedBuilder();
 		embed.setTitle("Nouvelle sanction :");
 		embed.setTimestamp(Instant.now());
@@ -94,6 +103,6 @@ public class Utils {
 		embed.addField(":unlock: Staff ayant modifié", unban_by, false);
 		JDABot.ch_sanctions.sendMessage(embed.build());
 	}
-
+	 */
 
 }
