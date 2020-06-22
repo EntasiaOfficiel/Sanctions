@@ -6,8 +6,8 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class SilentMuteCmd extends Command {
 
-	public SilentMuteCmd() {
-		super("smute");
+	public SilentMuteCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override

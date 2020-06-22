@@ -6,8 +6,8 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class SilentBanCmd extends Command {
 
-	public SilentBanCmd() {
-		super("sban");
+	public SilentBanCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override

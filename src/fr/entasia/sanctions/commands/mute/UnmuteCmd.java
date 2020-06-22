@@ -14,8 +14,8 @@ import java.util.Date;
 
 public class UnmuteCmd extends Command {
 
-	public UnmuteCmd() {
-		super("unmute");
+	public UnmuteCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override

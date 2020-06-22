@@ -14,8 +14,8 @@ import java.util.Calendar;
 
 public class HistoryCmd extends Command {
 
-	public HistoryCmd() {
-		super("history");
+	public HistoryCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override

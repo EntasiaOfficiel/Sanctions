@@ -10,8 +10,8 @@ import java.util.function.Predicate;
 
 public class MuteListCmd extends Command {
 
-	public MuteListCmd() {
-		super("banlist");
+	public MuteListCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	private static final int PER_PAGES = 15;

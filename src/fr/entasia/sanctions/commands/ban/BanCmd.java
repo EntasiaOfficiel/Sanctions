@@ -26,9 +26,10 @@ public class BanCmd extends Command {
 	private static final Node banExcept = Main.lpAPI.buildNode("sanctions.except.ban").build();
 
 
-	public BanCmd() {
-		super("ban");
+	public BanCmd(String... names) {
+		super(names[0], null, names);
 	}
+
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
@@ -141,7 +142,7 @@ public class BanCmd extends Command {
 		}
 
 		int newTime;
-		String newReason=null;
+		String newReason;
 		if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))newTime = -1;
 		else {
 			newTime = TextUtils.timeToSeconds(args[1]);

@@ -14,8 +14,8 @@ import java.util.Date;
 
 public class UnbanCmd extends Command {
 
-	public UnbanCmd() {
-		super("unban");
+	public UnbanCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override

@@ -21,8 +21,8 @@ public class MuteCmd extends Command {
 
 	private static final Node muteExcept = Main.lpAPI.buildNode("sanctions.except.mute").build();
 
-	public MuteCmd() {
-		super("mute");
+	public MuteCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override

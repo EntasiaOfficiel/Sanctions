@@ -15,8 +15,8 @@ import java.util.Date;
 
 public class KickCmd extends Command {
 
-	public KickCmd() {
-		super("kick");
+	public KickCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override

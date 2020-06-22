@@ -14,8 +14,8 @@ import java.util.Arrays;
 
 public class CheckCmd extends Command {
 
-	public CheckCmd() {
-		super("check");
+	public CheckCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override

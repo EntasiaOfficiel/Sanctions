@@ -48,25 +48,25 @@ public class Main extends Plugin {
 		try{
 			getLogger().info("Activation du plugin..");
 			main = this;
-			sql = new SQLConnection("sanctions", "sanctions"); // sanctions
+			sql = new SQLConnection("root", "sanctions"); // sanctions
 			lpAPI = LuckPerms.getApi();
 
 			getProxy().getPluginManager().registerListener(this, new Base());
 
 
-			getProxy().getPluginManager().registerCommand(this, new CheckCmd());
-			getProxy().getPluginManager().registerCommand(this, new MuteListCmd());
-			getProxy().getPluginManager().registerCommand(this, new HistoryCmd());
+			getProxy().getPluginManager().registerCommand(this, new CheckCmd("check"));
+//			getProxy().getPluginManager().registerCommand(this, new MuteListCmd("mutelist"));
+			getProxy().getPluginManager().registerCommand(this, new HistoryCmd("history"));
 
-			getProxy().getPluginManager().registerCommand(this, new BanCmd());
-			getProxy().getPluginManager().registerCommand(this, new SilentBanCmd());
-			getProxy().getPluginManager().registerCommand(this, new UnbanCmd());
+			getProxy().getPluginManager().registerCommand(this, new BanCmd("ban"));
+			getProxy().getPluginManager().registerCommand(this, new SilentBanCmd("sban", "silentban"));
+			getProxy().getPluginManager().registerCommand(this, new UnbanCmd("unban"));
 
-			getProxy().getPluginManager().registerCommand(this, new MuteCmd());
-			getProxy().getPluginManager().registerCommand(this, new SilentMuteCmd());
-			getProxy().getPluginManager().registerCommand(this, new UnmuteCmd());
+			getProxy().getPluginManager().registerCommand(this, new MuteCmd("mute"));
+			getProxy().getPluginManager().registerCommand(this, new SilentMuteCmd("smute", "silentmute"));
+			getProxy().getPluginManager().registerCommand(this, new UnmuteCmd("unmute"));
 
-			getProxy().getPluginManager().registerCommand(this, new KickCmd());
+			getProxy().getPluginManager().registerCommand(this, new KickCmd("kick"));
 
 			cmdcompletes.add("check");
 			cmdcompletes.add("mutelist");
