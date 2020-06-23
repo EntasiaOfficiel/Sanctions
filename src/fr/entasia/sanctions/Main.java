@@ -48,7 +48,7 @@ public class Main extends Plugin {
 		try{
 			getLogger().info("Activation du plugin..");
 			main = this;
-			sql = new SQLConnection("root", "sanctions"); // sanctions
+			sql = new SQLConnection("sanctions", "sanctions");
 			lpAPI = LuckPerms.getApi();
 
 			getProxy().getPluginManager().registerListener(this, new Base());
