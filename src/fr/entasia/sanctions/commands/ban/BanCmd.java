@@ -1,8 +1,8 @@
 package fr.entasia.sanctions.commands.ban;
 
-import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.ServerUtils;
-import fr.entasia.apis.TextUtils;
+import fr.entasia.apis.other.ChatComponent;
+import fr.entasia.apis.utils.ServerUtils;
+import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.BanEntry;
@@ -69,6 +69,7 @@ public class BanCmd extends Command {
 	public static String createBan(CommandSender sender, String[] args, boolean silent) throws Exception {
 
 		ResultSet rs = Main.sql.fastSelectUnsafe("SELECT name,uuid,address FROM playerdata.global WHERE name=?", args[0]);
+		BanEntry se = new BanEntry();
 		if (rs.next()) {
 			UUID uuid = UUID.fromString(rs.getString("uuid"));
 			User u = manager.getUser(uuid);
@@ -84,9 +85,19 @@ public class BanCmd extends Command {
 			if (u.hasPermission(banExcept).asBoolean() && !sender.hasPermission("restricted.sancmaster")) {
 				return "§cTu ne peut pas bannir ce joueur !";
 			}
+			se.on = rs.getString("name");
+			se.ip = InetAddress.getByName(rs.getString("address")).getAddress();
+		}else{
+			sender.sendMessage(ChatComponent.create("§4Attention : "+args[0]+" ne s'est jamais connecté"));
+			se.on = args[0];
 		}
 
-		BanEntry se = new BanEntry();
+		se.by = sender.getName();
+		se.reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+		if (se.reason.equals("")) se.reason = "Aucune";
+		se.when = Calendar.getInstance();
+
+		se.type = 0;
 
 		if (args[1].equalsIgnoreCase("def") || args[1].equalsIgnoreCase("inf")) se.time = -1;
 		else {
@@ -94,14 +105,6 @@ public class BanCmd extends Command {
 			if (se.time <= 0) return "§cTemps " + args[1] + " invalide !";
 		}
 
-		se.on = rs.getString("name");
-		se.ip = InetAddress.getByName(rs.getString("address")).getAddress();
-		se.by = sender.getName();
-		se.reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-		if (se.reason.equals("")) se.reason = "Aucune";
-		se.when = Calendar.getInstance();
-
-		se.type = 0;
 
 
 		se.id = Utils.requ(1, "INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
@@ -110,8 +113,11 @@ public class BanCmd extends Command {
 		Main.sql.fastUpdate("INSERT INTO actuals (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
 				"(?, ?, ?, ?, ?, ?, ?)", se.id, se.on, se.by, se.type, se.when.getTimeInMillis(), se.time, se.reason);
 
+
+		Main.sql.fastUpdate("DELETE FROM global.reports WHERE reported = ?", se.on);
+
 		Utils.bans.add(se);
-		ProxiedPlayer p = Main.main.getProxy().getPlayer(rs.getString("name"));
+		ProxiedPlayer p = Main.main.getProxy().getPlayer(se.on);
 		if (p != null) p.disconnect(se.genBanReason().create());
 
 		if (silent) {
@@ -132,7 +138,7 @@ public class BanCmd extends Command {
 
 
 
-	public static String modifyBan(CommandSender sender, String[] args, boolean silent, BanEntry se) throws Exception {
+	public static String modifyBan(CommandSender sender, String[] args, boolean silent, BanEntry se) {
 		if (!se.by.equals(sender.getName())){
 			if (sender.hasPermission("sanctions.override.ban")) {
 				sender.sendMessage(ChatComponent.create("§4Attention : tu modifie une sanction qui n'est pas la tienne"));

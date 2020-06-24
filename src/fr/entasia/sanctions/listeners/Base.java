@@ -1,7 +1,7 @@
 package fr.entasia.sanctions.listeners;
 
-import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.TextUtils;
+import fr.entasia.apis.other.ChatComponent;
+import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.BanEntry;

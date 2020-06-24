@@ -11,6 +11,7 @@ import fr.entasia.sanctions.commands.mute.MuteCmd;
 import fr.entasia.sanctions.commands.mute.SilentMuteCmd;
 import fr.entasia.sanctions.commands.mute.UnmuteCmd;
 import fr.entasia.sanctions.commands.others.KickCmd;
+import fr.entasia.sanctions.commands.others.SilentKickCmd;
 import fr.entasia.sanctions.listeners.Base;
 import fr.entasia.sanctions.utils.BanEntry;
 import fr.entasia.sanctions.utils.MuteEntry;
@@ -67,6 +68,7 @@ public class Main extends Plugin {
 			getProxy().getPluginManager().registerCommand(this, new UnmuteCmd("unmute"));
 
 			getProxy().getPluginManager().registerCommand(this, new KickCmd("kick"));
+			getProxy().getPluginManager().registerCommand(this, new SilentKickCmd("skick", "silentkick"));
 
 			cmdcompletes.add("check");
 			cmdcompletes.add("mutelist");

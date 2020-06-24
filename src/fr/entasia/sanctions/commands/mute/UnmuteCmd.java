@@ -1,7 +1,7 @@
 package fr.entasia.sanctions.commands.mute;
 
-import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.ServerUtils;
+import fr.entasia.apis.other.ChatComponent;
+import fr.entasia.apis.utils.ServerUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.MuteEntry;

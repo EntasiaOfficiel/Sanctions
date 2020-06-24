@@ -1,8 +1,8 @@
 package fr.entasia.sanctions.commands.mute;
 
-import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.ServerUtils;
-import fr.entasia.apis.TextUtils;
+import fr.entasia.apis.other.ChatComponent;
+import fr.entasia.apis.utils.ServerUtils;
+import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.MuteEntry;
@@ -122,7 +122,7 @@ public class MuteCmd extends Command {
 	}
 
 
-	public static String modifyMute(CommandSender sender, ProxiedPlayer target, String[] args, boolean silent, MuteEntry se) throws Exception {
+	public static String modifyMute(CommandSender sender, ProxiedPlayer target, String[] args, boolean silent, MuteEntry se) {
 
 			if (!se.by.equals(sender.getName())){
 				if (sender.hasPermission("sanctions.override.mute")) {
@@ -133,7 +133,7 @@ public class MuteCmd extends Command {
 			}
 
 			int newTime;
-			String newReason = null;
+			String newReason;
 
 			if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))newTime = -1;
 			else {

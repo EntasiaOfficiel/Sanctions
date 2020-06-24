@@ -1,6 +1,6 @@
 package fr.entasia.sanctions.commands.infos;
 
-import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;

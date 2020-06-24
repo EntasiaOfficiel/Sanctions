@@ -1,6 +1,6 @@
 package fr.entasia.sanctions.utils;
 
-import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.TextUtils;
 import fr.entasia.sanctions.Main;
 import net.md_5.bungee.api.chat.HoverEvent;

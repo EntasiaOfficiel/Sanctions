@@ -1,17 +1,11 @@
 package fr.entasia.sanctions.utils;
 
-import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.TextUtils;
+import fr.entasia.apis.other.ChatComponent;
+import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
 
 public class BanEntry extends MuteEntry {
 	public byte[] ip;
-
-	@Override
-	public void SQLDelete() {
-		super.SQLDelete();
-		Main.sql.fastUpdate("DELETE FROM global.reports WHERE reported = ?", on);
-	}
 
 	public ChatComponent genBanReason(){
 		return new ChatComponent(
