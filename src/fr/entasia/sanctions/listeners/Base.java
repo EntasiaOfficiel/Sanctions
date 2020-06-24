@@ -22,7 +22,7 @@ public class Base implements Listener {
 		String name = e.getConnection().getName();
 		byte[] ip = e.getConnection().getAddress().getAddress().getAddress();
 		for(BanEntry se : Utils.bans){
-			if(name.equals(se.on)|| Arrays.equals(ip, se.ip)){
+			if(name.equals(se.on)|| (se.ip!=null&&Arrays.equals(ip, se.ip))){
 				ChatComponent cc;
 				if(se.isValid()) {
 					cc = se.genBanReason();

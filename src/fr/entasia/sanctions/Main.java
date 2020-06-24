@@ -85,7 +85,7 @@ public class Main extends Plugin {
 			cmdcompletes.add("kick");
 
 			ResultSet rs = sql.fastSelectUnsafe(
-					"SELECT playerdata.global.address, sanctions.actuals.* FROM actuals INNER JOIN playerdata.global ON sanctions.actuals.on = playerdata.global.name"
+					"SELECT playerdata.global.address, sanctions.actuals.* FROM actuals LEFT JOIN playerdata.global ON sanctions.actuals.on = playerdata.global.name"
 			);
 			MuteEntry se;
 			BanEntry ban;
