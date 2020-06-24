@@ -52,7 +52,7 @@ public class Utils {
 	}
 
 	public static void sendModifSancEmbed(MuteEntry se, String modifier, int newTime, String newReason){
-		SocketClient.sendData("EBH sanc 2 "+se.type+" "+se.on+" "+se.by+" "+se.when.getTimeInMillis()+" "+se.time+" "+b64(se.reason)+" "+modifier+" "+newTime+" "+newReason);
+		SocketClient.sendData("EBH sanc 2 "+se.type+" "+se.on+" "+se.by+" "+se.when.getTimeInMillis()+" "+se.time+" "+b64(se.reason)+" "+modifier+" "+newTime+" "+b64(newReason));
 	}
 
 
