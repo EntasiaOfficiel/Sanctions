@@ -27,11 +27,10 @@ public class MuteCmd extends Command {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
+		System.out.println("mute exec");
 		if(sender.hasPermission("sanctions.use.mute")){
 			sender.sendMessage(ChatComponent.create(execMute(sender, args, false)));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
-
-
 	}
 
 	public static String execMute(CommandSender sender, String[] args, boolean silent){
