@@ -1,8 +1,9 @@
 package fr.entasia.sanctions.utils;
 
 import fr.entasia.apis.other.ChatComponent;
-import fr.entasia.apis.TextUtils;
+import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
+import fr.entasia.sanctions.Utils;
 import net.md_5.bungee.api.chat.HoverEvent;
 
 import java.util.Calendar;
@@ -35,9 +36,15 @@ public class MuteEntry {
 				"§cInformations sur la sanction : ID: §4"+Integer.toHexString(id).toUpperCase(),
 				"§cSanctionné : §8"+ on,
 				"§cPar : §8"+by,
-				"§cQuand : §8"+formatWhen(),
-				"§cTemps : §8"+TextUtils.secondsToTime(time),
-				"§cRaison : §8"+reason);
+				"§cQuand : §8"+TextUtils.formatCalendar(when),
+				"§cTemps : §8"+(time==-1 ? "Indéfini" : TextUtils.secondsToTime(time))
+				);
+
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(when.getTimeInMillis()+time*1000);
+		cc.append("§cExpiration le : §8"+TextUtils.formatCalendar(c));
+		if(time!=-1)cc.append("§cExpiration dans : §8"+TextUtils.secondsToTime(remaning()));
+		cc.append("\n§cRaison : §8"+reason);
 
 		if(unban_by!=null){
 			cc.append("\n§cDébanni par : §8" + unban_by);
@@ -47,13 +54,13 @@ public class MuteEntry {
 		return new HoverEvent(HoverEvent.Action.SHOW_TEXT, cc.create());
 	}
 
-	public String formatWhen(){
-		return TextUtils.formatCalendar(when);
-	}
-
 	public int remaning(){
 		return (int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000);
 	}
+
+//	public int remaning(){
+//		return (int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000);
+//	}
 
 	public void SQLDelete(){
 		Main.sql.fastUpdate("DELETE FROM actuals WHERE `on`=? and type=?", on, type);

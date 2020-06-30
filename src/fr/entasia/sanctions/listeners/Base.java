@@ -48,7 +48,7 @@ public class Base implements Listener {
 				else{
 					int rem = se.remaning();
 					if(rem>0){
-						p.sendMessage(ChatComponent.create("§cTu es encore muté pour §8"+ TextUtils.secondsToTime(se.remaning())+"§c !"));
+						p.sendMessage(ChatComponent.create("§cTu es encore muté pour §8"+ TextUtils.secondsToTime(rem)+"§c !"));
 					}else{
 						se.SQLDelete();
 						Utils.mutes.remove(se);
