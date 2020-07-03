@@ -55,7 +55,7 @@ public class MuteEntry {
 	}
 
 	public int remaning(){
-		return (int) ((when.getTimeInMillis()/1000+time)-new Date().getTime()/1000);
+		return (int) ((when.getTimeInMillis()+time*1000)-new Date().getTime());
 	}
 
 //	public int remaning(){
