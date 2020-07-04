@@ -12,7 +12,7 @@ public class BanEntry extends MuteEntry {
 				"§c§m---§c  Tu es banni d'§bEnta§8sia§c ! (pas cool ca)  §c§m---",
 				" ",
 				"§cPar : §8"+by,
-				"§cLe : §8"+when,
+				"§cLe : §8"+TextUtils.formatCalendar(when),
 				"§cExpiration dans : §8"+(time == -1 ? "Indéfini" : TextUtils.secondsToTime(remaning())),
 				"§cBanni pour la raison : §8"+reason,
 				" ",
