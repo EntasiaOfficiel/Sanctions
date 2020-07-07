@@ -51,7 +51,7 @@ public class UnbanCmd extends Command {
 				Main.sql.fastUpdate("UPDATE history SET unban_by=?, unban_when=?, unban_reason=? WHERE id=?",
 						sender.getName(), new Date().getTime(), reason, se.id);
 				Utils.bans.remove(se);
-				ChatComponent cc = new ChatComponent("§cSanction : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c !"+Main.c);
+				ChatComponent cc = new ChatComponent("§cSanction : §8"+sender.getName()+"§c à débanni §8"+se.on+"§c ! "+Main.c);
 				cc.setHoverEvent(se.getHover(sender.getName(), Calendar.getInstance(), reason));
 				ServerUtils.permMsg("sanctions.notify.unban", cc.create());
 

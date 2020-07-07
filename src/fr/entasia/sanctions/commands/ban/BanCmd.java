@@ -20,12 +20,9 @@ import java.util.UUID;
 
 public class BanCmd extends Command {
 
-
-
 	public BanCmd(String... names) {
 		super(names[0], null, names);
 	}
-
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {

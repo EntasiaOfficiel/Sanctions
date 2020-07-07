@@ -21,10 +21,9 @@ public class HistoryCmd extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if(sender.hasPermission("sanctions.use.history")) {
-			if (args.length == 0) ChatComponent.create("§cSyntaxe : /history <pseudo> [options]"); // TODO options à faire
+			if (args.length == 0) sender.sendMessage(ChatComponent.create("§cSyntaxe : /history <pseudo> [options]"));
 			else {
 				try {
-
 					ResultSet rs = Main.sql.fastSelectUnsafe("SELECT * FROM history WHERE `on`=? ORDER BY `when` ASC", args[0]);
 					if (rs.next()) {
 						Calendar c;
