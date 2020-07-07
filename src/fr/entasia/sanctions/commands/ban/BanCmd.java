@@ -6,9 +6,7 @@ import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.BanEntry;
-import me.lucko.luckperms.api.Node;
-import me.lucko.luckperms.api.User;
-import me.lucko.luckperms.api.manager.UserManager;
+import net.luckperms.api.model.user.User;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -22,8 +20,6 @@ import java.util.UUID;
 
 public class BanCmd extends Command {
 
-
-	private static final Node banExcept = Main.lpAPI.buildNode("sanctions.except.ban").build();
 
 
 	public BanCmd(String... names) {
@@ -72,17 +68,17 @@ public class BanCmd extends Command {
 		BanEntry se = new BanEntry();
 		if (rs.next()) {
 			UUID uuid = UUID.fromString(rs.getString("uuid"));
-			User u = manager.getUser(uuid);
+			User u = Main.lpAPI.getUserManager().getUser(uuid);
 			if (u == null) {
 				try {
-					u = manager.loadUser(uuid).get();
+					u = Main.lpAPI.getUserManager().loadUser(uuid).get();
 				} catch (Exception e) {
 					e.printStackTrace();
 					return "§cImpossible de charger les données de cet utilisateur ! (Erreur LuckPerms, contacte iTrooz_)";
 				}
 				if (u == null) return "§cImpossible de charger les données de cet utilisateur !";
 			}
-			if (u.hasPermission(banExcept).asBoolean() && !sender.hasPermission("restricted.sancmaster")) {
+			if (Utils.hasPermission(u, "sanctions.except.ban") && !sender.hasPermission("restricted.sancmaster")) {
 				return "§cTu ne peut pas bannir ce joueur !";
 			}
 			se.on = rs.getString("name");
@@ -185,8 +181,4 @@ public class BanCmd extends Command {
 
 		return "§cTu as bien modifié la sanction de §8"+se.on+"§c !";
 	}
-
-
-
-	public static UserManager manager = Main.lpAPI.getUserManager();
 }

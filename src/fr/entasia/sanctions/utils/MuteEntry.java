@@ -3,7 +3,6 @@ package fr.entasia.sanctions.utils;
 import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
-import fr.entasia.sanctions.Utils;
 import net.md_5.bungee.api.chat.HoverEvent;
 
 import java.util.Calendar;

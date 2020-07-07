@@ -2,7 +2,6 @@ package fr.entasia.sanctions.utils;
 
 import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.utils.TextUtils;
-import fr.entasia.sanctions.Main;
 
 public class BanEntry extends MuteEntry {
 	public byte[] ip;

@@ -3,13 +3,12 @@ package fr.entasia.sanctions;
 import fr.entasia.apis.socket.SocketClient;
 import fr.entasia.sanctions.utils.BanEntry;
 import fr.entasia.sanctions.utils.MuteEntry;
-import javafx.scene.Camera;
+import net.luckperms.api.model.user.User;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Calendar;
 
 public class Utils {
 
@@ -105,5 +104,9 @@ public class Utils {
 		JDABot.ch_sanctions.sendMessage(embed.build());
 	}
 	 */
+
+	public static boolean hasPermission(User u, String perm){
+		return u.getCachedData().getPermissionData().checkPermission(perm).asBoolean();
+	}
 
 }

@@ -6,9 +6,7 @@ import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
 import fr.entasia.sanctions.utils.MuteEntry;
-import me.lucko.luckperms.api.Node;
-import me.lucko.luckperms.api.User;
-import me.lucko.luckperms.api.manager.UserManager;
+import net.luckperms.api.model.user.User;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -18,8 +16,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 public class MuteCmd extends Command {
-
-	private static final Node muteExcept = Main.lpAPI.buildNode("sanctions.except.mute").build();
 
 	public MuteCmd(String... names) {
 		super(names[0], null, names);
@@ -66,10 +62,10 @@ public class MuteCmd extends Command {
 
 	public static String createMute(CommandSender sender, ProxiedPlayer target, String[] args, boolean silent) throws Exception {
 
-		User u = manager.getUser(target.getUniqueId());
+		User u = Main.lpAPI.getUserManager().getUser(target.getUniqueId());
 		if (u == null) return "§cImpossible de charger les données de cet utilisateur !";
 
-		if (u.hasPermission(muteExcept).asBoolean() && !sender.hasPermission("restricted.sancmaster")) {
+		if (Utils.hasPermission(u, "sanctions.except.mute") && !sender.hasPermission("restricted.sancmaster")) {
 			return "§cTu ne peut pas muter ce joueur !";
 		}
 
@@ -123,59 +119,55 @@ public class MuteCmd extends Command {
 
 	public static String modifyMute(CommandSender sender, ProxiedPlayer target, String[] args, boolean silent, MuteEntry se) {
 
-			if (!se.by.equals(sender.getName())){
-				if (sender.hasPermission("sanctions.override.mute")) {
-					sender.sendMessage(ChatComponent.create("§4Attention : tu modifie une sanction qui n'est pas la tienne"));
-				}else{
-					return "§cTu ne peux pas modifier cette sanction car elle à été faite par "+se.by+" !";
-				}
-			}
-
-			int newTime;
-			String newReason;
-
-			if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))newTime = -1;
-			else {
-				newTime = TextUtils.timeToSeconds(args[1]);
-				if (newTime <= 0) return "§cTemps " + args[1] + " invalide !";
-			}
-
-			ChatComponent msg = new ChatComponent(
-					"§cTon mute à été modifié :",
-					"§cNouveau temps : §8"+TextUtils.secondsToTime(se.time));
-
-			newReason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-			if(newReason.equals("")){
-				newReason = "Aucune";
-				Utils.sendModifSancEmbed(se, sender.getName(), newTime, newReason);
+		if (!se.by.equals(sender.getName())){
+			if (sender.hasPermission("sanctions.override.mute")) {
+				sender.sendMessage(ChatComponent.create("§4Attention : tu modifie une sanction qui n'est pas la tienne"));
 			}else{
-				Utils.sendModifSancEmbed(se, sender.getName(), newTime, newReason);
-				msg.append("\n§cNouvelle raison : §8"+newReason);
-				se.reason = newReason;
+				return "§cTu ne peux pas modifier cette sanction car elle à été faite par "+se.by+" !";
 			}
-			se.time = newTime;
-
-			Main.sql.fastUpdate("UPDATE actuals SET time=?, reason=? WHERE id=?", se.time, se.reason, se.id);
-			Main.sql.fastUpdate("UPDATE history SET time=?, reason=? WHERE id=?", se.time, se.reason, se.id);
-
-			if(silent){
-				ChatComponent cc = new ChatComponent("§cSanction §ldiscrète§c : §8"+sender.getName()+
-						"§c à mis à jour le mute de §8"+se.on+"§c ! "+Main.c);
-				cc.setHoverEvent(se.getHover());
-				ServerUtils.permMsg("sanctions.notify.mute", cc.create());
-			}else {
-				ChatComponent cc = new ChatComponent("§cSanction : §8" + sender.getName() +
-						"§c à mis à jour le mute de  §8" + se.on + "§c ! " + Main.c);
-				cc.setHoverEvent(se.getHover());
-				Main.main.getProxy().broadcast(cc.create());
-			}
-			target.sendMessage(msg.create());
-
-
-			return "§cTu as bien modifié la sanction de §8"+se.on+"§c !";
 		}
 
+		int newTime;
+		String newReason;
 
-	public static UserManager manager = Main.lpAPI.getUserManager();
+		if(args[1].equalsIgnoreCase("def")||args[1].equalsIgnoreCase("inf"))newTime = -1;
+		else {
+			newTime = TextUtils.timeToSeconds(args[1]);
+			if (newTime <= 0) return "§cTemps " + args[1] + " invalide !";
+		}
 
+		ChatComponent msg = new ChatComponent(
+				"§cTon mute à été modifié :",
+				"§cNouveau temps : §8"+TextUtils.secondsToTime(se.time));
+
+		newReason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+		if(newReason.equals("")){
+			newReason = "Aucune";
+			Utils.sendModifSancEmbed(se, sender.getName(), newTime, newReason);
+		}else{
+			Utils.sendModifSancEmbed(se, sender.getName(), newTime, newReason);
+			msg.append("\n§cNouvelle raison : §8"+newReason);
+			se.reason = newReason;
+		}
+		se.time = newTime;
+
+		Main.sql.fastUpdate("UPDATE actuals SET time=?, reason=? WHERE id=?", se.time, se.reason, se.id);
+		Main.sql.fastUpdate("UPDATE history SET time=?, reason=? WHERE id=?", se.time, se.reason, se.id);
+
+		if(silent){
+			ChatComponent cc = new ChatComponent("§cSanction §ldiscrète§c : §8"+sender.getName()+
+					"§c à mis à jour le mute de §8"+se.on+"§c ! "+Main.c);
+			cc.setHoverEvent(se.getHover());
+			ServerUtils.permMsg("sanctions.notify.mute", cc.create());
+		}else {
+			ChatComponent cc = new ChatComponent("§cSanction : §8" + sender.getName() +
+					"§c à mis à jour le mute de  §8" + se.on + "§c ! " + Main.c);
+			cc.setHoverEvent(se.getHover());
+			Main.main.getProxy().broadcast(cc.create());
+		}
+		target.sendMessage(msg.create());
+
+
+		return "§cTu as bien modifié la sanction de §8"+se.on+"§c !";
+	}
 }

@@ -4,7 +4,6 @@ import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.utils.ServerUtils;
 import fr.entasia.sanctions.Main;
 import fr.entasia.sanctions.Utils;
-import fr.entasia.sanctions.commands.mute.MuteCmd;
 import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

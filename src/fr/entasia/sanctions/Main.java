@@ -6,7 +6,6 @@ import fr.entasia.sanctions.commands.ban.SilentBanCmd;
 import fr.entasia.sanctions.commands.ban.UnbanCmd;
 import fr.entasia.sanctions.commands.infos.CheckCmd;
 import fr.entasia.sanctions.commands.infos.HistoryCmd;
-import fr.entasia.sanctions.commands.infos.MuteListCmd;
 import fr.entasia.sanctions.commands.mute.MuteCmd;
 import fr.entasia.sanctions.commands.mute.SilentMuteCmd;
 import fr.entasia.sanctions.commands.mute.UnmuteCmd;
@@ -15,8 +14,8 @@ import fr.entasia.sanctions.commands.others.SilentKickCmd;
 import fr.entasia.sanctions.listeners.Base;
 import fr.entasia.sanctions.utils.BanEntry;
 import fr.entasia.sanctions.utils.MuteEntry;
-import me.lucko.luckperms.LuckPerms;
-import me.lucko.luckperms.api.LuckPermsApi;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.net.InetAddress;
@@ -38,7 +37,7 @@ public class Main extends Plugin {
 
 	public static Main main;
 	public static SQLConnection sql;
-	public static LuckPermsApi lpAPI;
+	public static LuckPerms lpAPI;
 
 	public static Random random = new Random();
 
@@ -50,7 +49,7 @@ public class Main extends Plugin {
 			getLogger().info("Activation du plugin..");
 			main = this;
 			sql = new SQLConnection("sanctions", "sanctions");
-			lpAPI = LuckPerms.getApi();
+			lpAPI = LuckPermsProvider.get();
 
 			getProxy().getPluginManager().registerListener(this, new Base());
 
