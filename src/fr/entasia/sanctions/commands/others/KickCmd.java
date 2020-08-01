@@ -23,7 +23,7 @@ public class KickCmd extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (sender.hasPermission("sanctions.use.kick")) {
-			execKick(sender, args, false);
+			sender.sendMessage(ChatComponent.create(execKick(sender, args, false)));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 

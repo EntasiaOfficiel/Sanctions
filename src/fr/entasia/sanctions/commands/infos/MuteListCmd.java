@@ -28,15 +28,7 @@ public class MuteListCmd extends Command {
 					sender.sendMessage(ChatComponent.create("§cCe nombre est invalide !"));
 					return;
 				}
-				Utils.mutes.removeIf(new Predicate<MuteEntry>() {
-					int i=0;
-					@Override
-					public boolean test(MuteEntry se) {
-						if(se.isValid()){
-							return false;
-						}else return true;
-					}
-				});
+				Utils.mutes.removeIf(se -> !se.isValid());
 			}
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
