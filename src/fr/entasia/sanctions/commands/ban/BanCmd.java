@@ -34,25 +34,24 @@ public class BanCmd extends Command {
 	public static String execBan(CommandSender sender, String[] args, boolean silent){
 		if(args.length<2){
 			return "§cSyntaxe : /"+(silent ? "silent" : "")+"ban <pseudo> <temps/def> [raison]";
-		}else{
-			try{
-				BanEntry se = null;
-				for(BanEntry lse : Utils.bans){
-					if(lse.on.equals(args[0])){
-						se = lse;
-						break;
-					}
+		}
+		try{
+			BanEntry se = null;
+			for(BanEntry lse : Utils.bans){
+				if(lse.on.equals(args[0])){
+					se = lse;
+					break;
 				}
-				if(se==null)return createBan(sender, args, silent);
-				else return modifyBan(sender, args, silent, se);
-			}catch(SQLException e){
-				e.printStackTrace();
-				Main.sql.broadcastError();
-				return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
-			}catch(Exception e){
-				e.printStackTrace();
-				return "§cUne erreur interne s'est produite ! Contacte iTrooz_ !";
 			}
+			if(se==null)return createBan(sender, args, silent);
+			else return modifyBan(sender, args, silent, se);
+		}catch(SQLException e){
+			e.printStackTrace();
+			Main.sql.broadcastError();
+			return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
+		}catch(Exception e){
+			e.printStackTrace();
+			return "§cUne erreur interne s'est produite ! Contacte iTrooz_ !";
 		}
 	}
 

@@ -32,30 +32,27 @@ public class MuteCmd extends Command {
 	public static String execMute(CommandSender sender, String[] args, boolean silent){
 		if(args.length<2){
 			return "§cSyntaxe : /"+(silent ? "silent" : "")+"mute <pseudo> <temps/def> [raison]";
-		}else{
+		}
+		ProxiedPlayer target = Main.main.getProxy().getPlayer(args[0]);
+		if (target == null) return "§cCe joueur n'est pas connecté ou n'existe pas !";
 
-
-			ProxiedPlayer target = Main.main.getProxy().getPlayer(args[0]);
-			if (target == null) return "§cCe joueur n'est pas connecté ou n'existe pas !";
-
-			try{
-				MuteEntry se = null;
-				for(MuteEntry lse : Utils.mutes){
-					if(lse.on.equals(args[0])){
-						se = lse;
-						break;
-					}
+		try{
+			MuteEntry se = null;
+			for(MuteEntry lse : Utils.mutes){
+				if(lse.on.equals(args[0])){
+					se = lse;
+					break;
 				}
-				if(se==null) return createMute(sender, target, args, silent);
-				else return modifyMute(sender, target, args, silent, se);
-
-			}catch(SQLException e){
-				e.printStackTrace();
-				Main.sql.broadcastError();
-				return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
-			}catch(Exception e){
-				return "§cUne erreur interne s'est produite ! Contacte iTrooz_ !";
 			}
+			if(se==null) return createMute(sender, target, args, silent);
+			else return modifyMute(sender, target, args, silent, se);
+
+		}catch(SQLException e){
+			e.printStackTrace();
+			Main.sql.broadcastError();
+			return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
+		}catch(Exception e){
+			return "§cUne erreur interne s'est produite ! Contacte iTrooz_ !";
 		}
 	}
 

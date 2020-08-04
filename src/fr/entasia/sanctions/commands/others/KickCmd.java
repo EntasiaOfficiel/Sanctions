@@ -28,12 +28,14 @@ public class KickCmd extends Command {
 	}
 
 	public static String execKick(CommandSender sender, String[] args, boolean silent){
+		if(args.length==0){
+			return "§cSyntaxe : /"+(silent ? "silent" : "")+"mute <pseudo> <temps/def> [raison]";
+		}
 		ProxiedPlayer target = Main.main.getProxy().getPlayer(args[0]);
 		if(target==null)return "§8"+args[0]+" §cn'est pas connecté ou n'existe pas !";
 		else if(target.hasPermission("sanctions.except.kick")&&!sender.hasPermission("restricted.sancmaster")){
 			return "§cTu ne peux pas kick §8"+target.getName()+"§c !";
 		}else {
-
 			MuteEntry se = new MuteEntry(); // pas une vraie, juste structure
 			se.type = 2;
 			se.on = target.getName();
