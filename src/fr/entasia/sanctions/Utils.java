@@ -20,6 +20,7 @@ public class Utils {
 	}
 
 	public static int requ(int index, String requ, Object... values) throws SQLException { // A FAIRE DANS L'HISTORY
+		Main.sql.checkConnect();
 		PreparedStatement ps = Main.sql.connection.prepareStatement(requ);
 		for(int i = 0; i < values.length; i++) {
 			ps.setObject(i + 2, values[i].toString());
