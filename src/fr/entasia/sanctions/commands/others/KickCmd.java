@@ -44,7 +44,7 @@ public class KickCmd extends Command {
 
 			if (args.length == 1) se.reason = "Aucune";
 			else se.reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-			ChatComponent cc = new ChatComponent("§c§m----§c  Tu à été kick !  §c§m----",
+			ChatComponent cc = new ChatComponent("§c§m----§c  Tu as été kick !  §c§m----",
 					"",
 					"§cPar : §8" + sender.getName(),
 					"§cRaison : §8" + se.reason
