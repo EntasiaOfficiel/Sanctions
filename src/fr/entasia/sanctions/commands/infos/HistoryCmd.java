@@ -3,6 +3,7 @@ package fr.entasia.sanctions.commands.infos;
 import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.sanctions.Main;
+import fr.entasia.sanctions.SanctionTypes;
 import fr.entasia.sanctions.utils.MuteEntry;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -42,7 +43,9 @@ public class HistoryCmd extends Command {
 							se.time = rs.getInt("time");
 							se.reason = rs.getString("reason");
 
-							cc = new ChatComponent("§c" + TextUtils.formatCalendar(se.when) + " §8" + (rs.getByte("type") == 0 ? "Ban" : "Mute")+" §c"+Main.c);
+							se.type = rs.getByte("type");
+
+							cc = new ChatComponent("§c" + TextUtils.formatCalendar(se.when) + " §8" + SanctionTypes.getByID(se.type)+" §c"+Main.c);
 							a = rs.getString("unban_by");
 							if(a==null)hover = se.getHover();
 							else{
@@ -51,7 +54,6 @@ public class HistoryCmd extends Command {
 								hover = se.getHover(a, c, rs.getString("unban_reason"));
 							}
 
-							se.type = rs.getByte("type");
 							cc.setHoverEvent(hover);
 
 							sender.sendMessage(cc.create());
