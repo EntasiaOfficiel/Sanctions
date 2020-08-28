@@ -29,35 +29,27 @@ public class MuteCmd extends Command {
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 
-	public static String execMute(CommandSender sender, String[] args, boolean silent){
-		if(args.length<2){
-			return "§cSyntaxe : /"+(silent ? "silent" : "")+"mute <pseudo> <temps/def> [raison]";
+	public static String execMute(CommandSender sender, String[] args, boolean silent) {
+		if (args.length < 2) {
+			return "§cSyntaxe : /" + (silent ? "silent" : "") + "mute <pseudo> <temps/def> [raison]";
 		}
 		ProxiedPlayer target = Main.main.getProxy().getPlayer(args[0]);
 		if (target == null) return "§cCe joueur n'est pas connecté ou n'existe pas !";
 
-		try{
-			MuteEntry se = null;
-			for(MuteEntry lse : Utils.mutes){
-				if(lse.on.equals(args[0])){
-					se = lse;
-					break;
-				}
+		MuteEntry se = null;
+		for (MuteEntry lse : Utils.mutes) {
+			if (lse.on.equals(args[0])) {
+				se = lse;
+				break;
 			}
-			if(se==null) return createMute(sender, target, args, silent);
-			else return modifyMute(sender, target, args, silent, se);
-
-		}catch(SQLException e){
-			e.printStackTrace();
-			Main.sql.broadcastError();
-			return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
-		}catch(Exception e){
-			return "§cUne erreur interne s'est produite ! Contacte iTrooz_ !";
 		}
+		if (se == null) return createMute(sender, target, args, silent);
+		else return modifyMute(sender, target, args, silent, se);
+
 	}
 
 
-	public static String createMute(CommandSender sender, ProxiedPlayer target, String[] args, boolean silent) throws Exception {
+	public static String createMute(CommandSender sender, ProxiedPlayer target, String[] args, boolean silent) {
 
 		User u = Main.lpAPI.getUserManager().getUser(target.getUniqueId());
 		if (u == null) return "§cImpossible de charger les données de cet utilisateur !";
@@ -75,7 +67,6 @@ public class MuteCmd extends Command {
 		}
 
 		se.on = target.getName();
-		//				se.ip = p.getPendingConnection().getAddress().getAddress().getAddress(); // pas d'ip pour le mute ?
 		se.by = sender.getName();
 		se.reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
 		if (se.reason.equals("")) se.reason = "Aucune";
@@ -84,8 +75,14 @@ public class MuteCmd extends Command {
 		se.type = 1;
 
 
-		se.id = Utils.requ(1, "INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
-				"(?, ?, ?, ?, ?, ?, ?)", se.on, se.by, se.type, se.when.getTimeInMillis(), se.time, se.reason);
+		try{
+			se.id = Utils.IDRequ(1, "INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
+					"(?, ?, ?, ?, ?, ?, ?)", se.on, se.by, se.type, se.when.getTimeInMillis(), se.time, se.reason);
+		}catch(SQLException e){
+			e.printStackTrace();
+			Main.sql.broadcastError();
+			return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
+		}
 
 		Main.sql.fastUpdate("INSERT INTO actuals (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
 				"(?, ?, ?, ?, ?, ?, ?)", se.id, se.on, se.by, se.type, se.when.getTimeInMillis(), se.time, se.reason);

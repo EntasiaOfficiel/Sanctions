@@ -37,19 +37,35 @@ public class KickCmd extends Command {
 			return "§cTu ne peux pas kick §8"+target.getName()+"§c !";
 		}else {
 			MuteEntry se = new MuteEntry(); // pas une vraie, juste structure
-			se.type = 2;
 			se.on = target.getName();
 			se.by = sender.getName();
 			se.when = Calendar.getInstance();
 
+			se.type = 2;
+
 			if (args.length == 1) se.reason = "Aucune";
 			else se.reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+
+			try {
+				se.id = Utils.IDRequ(1, "INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
+						"(?, ?, ?, ?, ?, ?, ?)", se.on, se.by, se.type, new Date().getTime(), 0, se.reason);
+
+
+				Utils.sendSancEmbed(se);
+			System.out.println(se.id);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Main.sql.broadcastError();
+				return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
+			}
+
 			ChatComponent cc = new ChatComponent("§c§m----§c  Tu as été kick !  §c§m----",
 					"",
 					"§cPar : §8" + sender.getName(),
 					"§cRaison : §8" + se.reason
 			);
 			target.disconnect(cc.create());
+
 
 			if (silent) {
 				cc = new ChatComponent("§cSanction §ldiscrète§c : §8" + sender.getName() + "§c à kick §8" + se.on + "§c !" + Main.c);
@@ -61,19 +77,7 @@ public class KickCmd extends Command {
 				Main.main.getProxy().broadcast(cc.create());
 			}
 
-			try {
-				Utils.requ(1, "INSERT INTO history (`id`, `on`, `by`, `type`, `when`, `time`, `reason`) VALUES " +
-						"(?, ?, ?, ?, ?, ?, ?)", target.getName(), sender.getName(), 2, new Date().getTime(), 0, se.reason);
-
-
-				Utils.sendSancEmbed(se);
-
-				return "§cTu as kick §8" + target.getName() + "§c !";
-			} catch (SQLException e) {
-				e.printStackTrace();
-				Main.sql.broadcastError();
-				return "§cUne erreur SQL s'est produite ! Contacte iTrooz_ !";
-			}
+			return "§cTu as kick §8" + target.getName() + "§c !";
 		}
 	}
 }

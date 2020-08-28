@@ -19,7 +19,7 @@ public class Utils {
 		return Main.random.nextInt(0x7FFFFF);
 	}
 
-	public static int requ(int index, String requ, Object... values) throws SQLException { // A FAIRE DANS L'HISTORY
+	public static int IDRequ(int index, String requ, Object... values) throws SQLException { // A FAIRE DANS L'HISTORY
 		Main.sql.checkConnect();
 		PreparedStatement ps = Main.sql.connection.prepareStatement(requ);
 		for(int i = 0; i < values.length; i++) {
