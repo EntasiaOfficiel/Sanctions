@@ -17,15 +17,20 @@ import fr.entasia.sanctions.utils.MuteEntry;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 
+import java.io.File;
+import java.io.InputStream;
 import java.net.InetAddress;
+import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
 public class Main extends Plugin {
-
 
 	/*
 	0 - ban
@@ -36,8 +41,11 @@ public class Main extends Plugin {
 	public static final char c = '♧';
 
 	public static Main main;
+	public static boolean dev;
 	public static SQLConnection sql;
 	public static LuckPerms lpAPI;
+
+	public static Configuration configuration;
 
 	public static Random random = new Random();
 
@@ -48,8 +56,12 @@ public class Main extends Plugin {
 		try{
 			getLogger().info("Activation du plugin..");
 			main = this;
-			sql = new SQLConnection("sanctions", "sanctions");
+
+			loadConfig();
+
+			sql = new SQLConnection(dev).mariadb("sanctions", "sanctions");
 			lpAPI = LuckPermsProvider.get();
+
 
 			getProxy().getPluginManager().registerListener(this, new Base());
 
@@ -126,5 +138,22 @@ public class Main extends Plugin {
 			getLogger().severe("ARRET DU SERVEUR !");
 			getProxy().stop();
 		}
+	}
+
+	public void loadConfig() throws Throwable {
+		if (!getDataFolder().exists()) {
+			getDataFolder().mkdir();
+		}
+
+		File configFile = new File(getDataFolder(), "config.yml");
+		if (!configFile.exists()) {
+			InputStream in = getResourceAsStream("config.yml");
+			Files.copy(in, configFile.toPath());
+		}
+
+		ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
+		configuration = provider.load(configFile);
+
+		dev = configuration.getBoolean("dev", false);
 	}
 }
